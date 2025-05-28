@@ -1,9 +1,9 @@
 import { instantMeiliSearch } from "@meilisearch/instant-meilisearch"
 
 const endpoint =
-  process.env.NEXT_PUBLIC_SEARCH_ENDPOINT || "http://127.0.0.1:7700"
+  process.env.NEXT_PUBLIC_SEARCH_ENDPOINT || "https://meilisearch-production-b4d1.up.railway.app"
 
-const apiKey = process.env.NEXT_PUBLIC_SEARCH_API_KEY || "test_key"
+const apiKey = process.env.MEILISEARCH_API_KEY || "q6fyay2ow9ipwhlnqo1ui3xga0hu8pxh"
 
 export const searchClient = instantMeiliSearch(endpoint, apiKey)
 

@@ -14,18 +14,12 @@ const Login = ({ setCurrentView }: Props) => {
   const [message, formAction] = useFormState(login, null)
 
   return (
-    <div
-      className="max-w-sm w-full flex flex-col items-center"
-      data-testid="login-page"
-    >
-      <h1 className="text-large-semi uppercase mb-6">Welcome back</h1>
-      <p className="text-center text-base-regular text-ui-fg-base mb-8">
-        Sign in to access an enhanced shopping experience.
-      </p>
-      <form className="w-full" action={formAction}>
-        <div className="flex flex-col w-full gap-y-2">
+    <div className="w-full" data-testid="login-page">
+      {/* Login Form */}
+      <form className="w-full space-y-6" action={formAction}>
+        <div className="space-y-4">
           <Input
-            label="Email"
+            label="Email Address"
             name="email"
             type="email"
             title="Enter a valid email address."
@@ -33,6 +27,7 @@ const Login = ({ setCurrentView }: Props) => {
             required
             data-testid="email-input"
           />
+          
           <Input
             label="Password"
             name="password"
@@ -42,22 +37,46 @@ const Login = ({ setCurrentView }: Props) => {
             data-testid="password-input"
           />
         </div>
-        <ErrorMessage error={message} data-testid="login-error-message" />
-        <SubmitButton data-testid="sign-in-button" className="w-full mt-6">
-          Sign in
+
+        {/* Error Message */}
+        {message && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+            <ErrorMessage error={message} data-testid="login-error-message" />
+          </div>
+        )}
+
+        {/* Submit Button */}
+        <SubmitButton 
+          data-testid="sign-in-button" 
+          className="w-full bg-pink-500 hover:bg-pink-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2"
+        >
+          Sign In
         </SubmitButton>
       </form>
-      <span className="text-center text-ui-fg-base text-small-regular mt-6">
-        Not a member?{" "}
+
+      {/* Forgot Password Link */}
+      <div className="text-center mt-6">
+        <button className="text-pink-500 hover:text-pink-600 text-sm font-medium transition-colors duration-200">
+          Forgot your password?
+        </button>
+      </div>
+
+      {/* Register Link */}
+      <div className="text-center mt-8 pt-6 border-t border-gray-100">
+        <p className="text-gray-600 mb-3">
+          New customer?
+        </p>
         <button
           onClick={() => setCurrentView(LOGIN_VIEW.REGISTER)}
-          className="underline"
+          className="inline-flex items-center gap-2 text-pink-500 hover:text-pink-600 font-semibold transition-colors duration-200"
           data-testid="register-button"
         >
-          Join us
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+          </svg>
+          Create an Account
         </button>
-        .
-      </span>
+      </div>
     </div>
   )
 }

@@ -44,6 +44,18 @@ const nextConfig = {
         protocol: "https",
         hostname: process.env.NEXT_PUBLIC_MINIO_ENDPOINT,
       }] : []),
+      {
+        protocol: 'https',
+        hostname: 'bucket-production-47b2.up.railway.app',
+        port: '',
+        pathname: '/medusa-media/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'admin.cakeboxgifts.co.uk',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
   serverRuntimeConfig: {

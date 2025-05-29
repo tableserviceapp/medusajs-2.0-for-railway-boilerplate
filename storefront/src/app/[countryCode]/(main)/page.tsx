@@ -1,9 +1,12 @@
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { getRegion } from "@lib/data/regions"
+import { getRegion, listRegions } from "@lib/data/regions"
+import { getProductsByCategoryHandle } from "@lib/data/products"
 import { cache } from "react"
 import Hero from "@modules/home/components/hero"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
+import TrendingTreats from "@modules/home/components/trending-treats"
+import { StoreRegion } from "@medusajs/types"
 
 export const metadata: Metadata = {
   title: "Cake Box Gifts - Premium Cake Delivery",
@@ -21,6 +24,11 @@ export default async function Home({
   if (!region) {
     notFound()
   }
+
+  // Get real products from different categories
+  const birthdayCakes = await getProductsByCategoryHandle("kids-birthdays", countryCode, 4)
+  const veganProducts = await getProductsByCategoryHandle("vegan", countryCode, 4)
+  const trendingProducts = await getProductsByCategoryHandle("trending-treats", countryCode, 8)
 
   return (
     <div className="min-h-screen bg-white">
@@ -57,11 +65,55 @@ export default async function Home({
       {/* Hero Section */}
       <Hero />
       
+      {/* Trust Badges Section */}
+      <section className="py-12 bg-pink-50">
+        <div className="content-container">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            {/* Free Delivery */}
+            <div className="flex flex-col items-center">
+              <h3 className="text-lg font-bold text-gray-900 mb-2 tracking-wide">
+                FREE DELIVERY ON<br />WEEKDAYS
+              </h3>
+              <div className="w-2 h-2 bg-gray-800 rounded-full mb-4"></div>
+              <p className="text-sm text-gray-700">
+                When you spend over £40
+              </p>
+            </div>
+            
+            {/* Handmade in London */}
+            <div className="flex flex-col items-center">
+              <h3 className="text-lg font-bold text-gray-900 mb-2 tracking-wide">
+                HANDMADE IN<br />LONDON
+              </h3>
+              <div className="w-2 h-2 bg-gray-800 rounded-full mb-4"></div>
+              <p className="text-sm text-gray-700">
+                Baking since 2015
+              </p>
+            </div>
+            
+            {/* Natural Ingredients */}
+            <div className="flex flex-col items-center">
+              <h3 className="text-lg font-bold text-gray-900 mb-2 tracking-wide">
+                NATURAL<br />INGREDIENTS
+              </h3>
+              <div className="w-2 h-2 bg-gray-800 rounded-full mb-4"></div>
+              <p className="text-sm text-gray-700 max-w-xs">
+                Only ever flavoured and coloured with fruits,<br />
+                vegetable and spices.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      {/* Trending Treats Section */}
+      <TrendingTreats products={trendingProducts} />
+      
       {/* Featured Collections */}
       <section className="py-12 bg-white">
         <div className="content-container">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">Shop by Category</h2>
+            <h2 className="text-4xl font-bold text-gray-800 mb-4">SHOP BY CATEGORY</h2>
             <p className="text-lg text-gray-600">Discover our delicious range of premium cakes and treats</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -142,86 +194,256 @@ export default async function Home({
         </div>
       </section>
 
+      {/* Birthday Cake Collection */}
+      <section className="py-16 bg-white">
+        <div className="content-container">
+          <div className="text-center mb-12">
+            <h3 className="text-3xl md:text-4xl font-bold text-blue-800 mb-4 flex items-center justify-center gap-3">
+              <span className="text-4xl">🎂</span>
+              BIRTHDAY CAKE COLLECTION
+            </h3>
+            <p className="text-lg text-blue-700">Perfect birthday cakes to make every celebration special!</p>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {birthdayCakes.length > 0 ? (
+              birthdayCakes.map((cake) => {
+                const price = cake.variants?.[0]?.calculated_price
+                const priceString = price && price.calculated_amount 
+                  ? `£${(price.calculated_amount / 100).toFixed(2)}` 
+                  : 'Price on request'
+                const imageUrl = cake.thumbnail || cake.images?.[0]?.url || "https://images.unsplash.com/photo-1558636508-e0db3814bd1d?w=400&h=300&fit=crop"
+                
+                return (
+                  <div key={cake.id} className="group cursor-pointer">
+                    <div className="relative overflow-hidden">
+                      <img
+                        src={imageUrl}
+                        alt={cake.title}
+                        className="w-full aspect-square object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute top-3 left-3">
+                        <span className="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                          Birthday
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-4 text-center">
+                      <h4 className="font-bold text-lg text-gray-800 mb-2 group-hover:text-blue-700 transition-colors">
+                        {cake.title}
+                      </h4>
+                      <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                        {cake.description || "Delicious birthday cake perfect for celebrations"}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xl font-bold text-blue-600">
+                          {priceString}
+                        </span>
+                        <LocalizedClientLink href={`/products/${cake.handle}`}>
+                          <button className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors duration-200 hover:scale-[1.02]">
+                            View Product
+                          </button>
+                        </LocalizedClientLink>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })
+            ) : (
+              // Fallback if no products found
+              [
+                {
+                  name: "Classic Birthday Cake",
+                  price: "£24.99",
+                  image: "https://images.unsplash.com/photo-1558636508-e0db3814bd1d?w=400&h=300&fit=crop",
+                  description: "Classic vanilla sponge with colorful buttercream",
+                  href: "/categories/kids-birthdays"
+                },
+                {
+                  name: "Chocolate Birthday Cake",
+                  price: "£26.99",
+                  image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=300&fit=crop",
+                  description: "Rich chocolate cake with birthday decorations",
+                  href: "/categories/kids-birthdays"
+                },
+                {
+                  name: "Rainbow Birthday Cake",
+                  price: "£28.99",
+                  image: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400&h=300&fit=crop",
+                  description: "Colorful rainbow layers with vanilla frosting",
+                  href: "/categories/kids-birthdays"
+                },
+                {
+                  name: "Unicorn Birthday Cake",
+                  price: "£32.99",
+                  image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400&h=300&fit=crop",
+                  description: "Magical unicorn themed birthday cake",
+                  href: "/categories/kids-birthdays"
+                }
+              ].map((cake, index) => (
+                <div key={index} className="group cursor-pointer">
+                  <div className="relative overflow-hidden">
+                    <img
+                      src={cake.image}
+                      alt={cake.name}
+                      className="w-full aspect-square object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute top-3 left-3">
+                      <span className="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                        Birthday
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-4 text-center">
+                    <h4 className="font-bold text-lg text-gray-800 mb-2 group-hover:text-blue-700 transition-colors">
+                      {cake.name}
+                    </h4>
+                    <p className="text-sm text-gray-600 mb-3">
+                      {cake.description}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xl font-bold text-blue-600">
+                        {cake.price}
+                      </span>
+                      <LocalizedClientLink href={cake.href}>
+                        <button className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors duration-200 hover:scale-[1.02]">
+                          View Products
+                        </button>
+                      </LocalizedClientLink>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      </section>
+
       {/* Vegan Best Sellers */}
       <section className="py-16 bg-white">
         <div className="content-container">
           <div className="text-center mb-12">
             <h3 className="text-3xl md:text-4xl font-bold text-green-800 mb-4 flex items-center justify-center gap-3">
               <span className="text-4xl">🌱</span>
-              Vegan Best Sellers
+              VEGAN BEST SELLERS
             </h3>
             <p className="text-lg text-green-700">Our most popular plant-based treats that customers absolutely love!</p>
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              {
-                name: "Vegan Carrot Cake",
-                price: "£15.99",
-                image: "https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=400&h=300&fit=crop",
-                description: "Moist carrot cake with vegan cream cheese frosting",
-                href: "/products/vegan-carrot-cake"
-              },
-              {
-                name: "Vegan Birthday Cake",
-                price: "£15.99",
-                image: "https://images.unsplash.com/photo-1558636508-e0db3814bd1d?w=400&h=300&fit=crop",
-                description: "Classic vanilla sponge with colorful buttercream",
-                href: "/products/vegan-birthday-cake"
-              },
-              {
-                name: "Vegan Berry Bliss",
-                price: "£15.99",
-                image: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400&h=300&fit=crop",
-                description: "Mixed berry cake with fresh fruit topping",
-                href: "/products/vegan-berry-bliss"
-              },
-              {
-                name: "Vegan Millionaires",
-                price: "£15.99",
-                image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400&h=300&fit=crop",
-                description: "Rich chocolate cake with caramel layers",
-                href: "/products/vegan-millionaires"
-              }
-            ].map((cake, index) => (
-              <div
-                key={index}
-                className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden hover:scale-[1.02]"
-              >
-                <div className="relative overflow-hidden">
-                  <img
-                    src={cake.image}
-                    alt={cake.name}
-                    className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute top-3 left-3">
-                    <span className="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
-                      Vegan
-                    </span>
-                  </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                </div>
+            {veganProducts.length > 0 ? (
+              veganProducts.map((product) => {
+                const price = product.variants?.[0]?.calculated_price
+                const priceString = price && price.calculated_amount 
+                  ? `£${(price.calculated_amount / 100).toFixed(2)}` 
+                  : 'Price on request'
+                const imageUrl = product.thumbnail || product.images?.[0]?.url || "https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=400&h=300&fit=crop"
                 
-                <div className="p-6">
-                  <h4 className="font-bold text-lg text-gray-800 mb-2 group-hover:text-green-700 transition-colors">
-                    {cake.name}
-                  </h4>
-                  <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-                    {cake.description}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold text-green-600">
-                      {cake.price}
-                    </span>
-                    <LocalizedClientLink href={cake.href}>
-                      <button className="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-colors duration-200 hover:scale-[1.02]">
-                        View Product
-                      </button>
-                    </LocalizedClientLink>
+                return (
+                  <div key={product.id} className="group cursor-pointer">
+                    <div className="relative overflow-hidden">
+                      <img
+                        src={imageUrl}
+                        alt={product.title}
+                        className="w-full aspect-square object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute top-3 left-3">
+                        <span className="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                          Vegan
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-4 text-center">
+                      <h4 className="font-bold text-lg text-gray-800 mb-2 group-hover:text-green-700 transition-colors">
+                        {product.title}
+                      </h4>
+                      <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                        {product.description || "Delicious vegan treat made with plant-based ingredients"}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xl font-bold text-green-600">
+                          {priceString}
+                        </span>
+                        <LocalizedClientLink href={`/products/${product.handle}`}>
+                          <button className="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-colors duration-200 hover:scale-[1.02]">
+                            View Product
+                          </button>
+                        </LocalizedClientLink>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })
+            ) : (
+              // Fallback if no products found
+              [
+                {
+                  name: "Vegan Carrot Cake",
+                  price: "£15.99",
+                  image: "https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=400&h=300&fit=crop",
+                  description: "Moist carrot cake with vegan cream cheese frosting",
+                  href: "/categories/vegan"
+                },
+                {
+                  name: "Vegan Birthday Cake",
+                  price: "£15.99",
+                  image: "https://images.unsplash.com/photo-1558636508-e0db3814bd1d?w=400&h=300&fit=crop",
+                  description: "Classic vanilla sponge with colorful buttercream",
+                  href: "/categories/vegan"
+                },
+                {
+                  name: "Vegan Berry Bliss",
+                  price: "£15.99",
+                  image: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400&h=300&fit=crop",
+                  description: "Mixed berry cake with fresh fruit topping",
+                  href: "/categories/vegan"
+                },
+                {
+                  name: "Vegan Millionaires",
+                  price: "£15.99",
+                  image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400&h=300&fit=crop",
+                  description: "Rich chocolate cake with caramel layers",
+                  href: "/categories/vegan"
+                }
+              ].map((cake, index) => (
+                <div key={index} className="group cursor-pointer">
+                  <div className="relative overflow-hidden">
+                    <img
+                      src={cake.image}
+                      alt={cake.name}
+                      className="w-full aspect-square object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute top-3 left-3">
+                      <span className="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                        Vegan
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-4 text-center">
+                    <h4 className="font-bold text-lg text-gray-800 mb-2 group-hover:text-green-700 transition-colors">
+                      {cake.name}
+                    </h4>
+                    <p className="text-sm text-gray-600 mb-3">
+                      {cake.description}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xl font-bold text-green-600">
+                        {cake.price}
+                      </span>
+                      <LocalizedClientLink href={cake.href}>
+                        <button className="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-colors duration-200 hover:scale-[1.02]">
+                          View Products
+                        </button>
+                      </LocalizedClientLink>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
           
           <div className="text-center mt-12">

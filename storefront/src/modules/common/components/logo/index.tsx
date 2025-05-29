@@ -10,7 +10,7 @@ const Logo = ({ className = "" }: { className?: string }) => {
         alt="Cake Box Gifts"
         width={240}
         height={160}
-        className="h-20 w-auto md:h-28 lg:h-32"
+        className="h-16 w-auto md:h-20 lg:h-24"
         priority
       />
     </LocalizedClientLink>

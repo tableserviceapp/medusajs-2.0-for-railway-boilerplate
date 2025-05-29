@@ -94,7 +94,7 @@ export const getProductsList = cache(async function ({
  * It will then return the paginated products based on the page and limit parameters.
  */
 export const getProductsListWithSort = cache(async function ({
-  page = 0,
+  page = 1,
   queryParams,
   sortBy = "created_at",
   countryCode,
@@ -113,7 +113,7 @@ export const getProductsListWithSort = cache(async function ({
   const {
     response: { products, count },
   } = await getProductsList({
-    pageParam: 0,
+    pageParam: 1,
     queryParams: {
       ...queryParams,
       limit: 100,
@@ -123,9 +123,9 @@ export const getProductsListWithSort = cache(async function ({
 
   const sortedProducts = sortProducts(products, sortBy)
 
-  const pageParam = (page - 1) * limit
+  const pageParam = Math.max(page - 1, 0) * limit
 
-  const nextPage = count > pageParam + limit ? pageParam + limit : null
+  const nextPage = count > pageParam + limit ? page + 1 : null
 
   const paginatedProducts = sortedProducts.slice(pageParam, pageParam + limit)
 
@@ -136,5 +136,48 @@ export const getProductsListWithSort = cache(async function ({
     },
     nextPage,
     queryParams,
+  }
+})
+
+export const getProductsByCategoryHandle = cache(async function (
+  categoryHandle: string,
+  countryCode: string,
+  limit: number = 4
+): Promise<HttpTypes.StoreProduct[]> {
+  const region = await getRegion(countryCode)
+
+  if (!region) {
+    return []
+  }
+
+  // First get the category by handle
+  const { getCategoryByHandle } = await import("@lib/data/categories")
+  
+  try {
+    const { product_categories } = await getCategoryByHandle([categoryHandle])
+    
+    if (!product_categories || product_categories.length === 0) {
+      console.log(`No category found for handle: ${categoryHandle}`)
+      return []
+    }
+
+    const category = product_categories[0]
+    console.log(`Found category: ${category.name} (${category.id}) for handle: ${categoryHandle}`)
+
+    // Then get products for that category
+    const { response } = await getProductsList({
+      pageParam: 1,
+      queryParams: {
+        category_id: [category.id],
+        limit,
+      } as any,
+      countryCode,
+    })
+
+    console.log(`Fetched ${response.products.length} products for category ${categoryHandle}:`, response.products.map(p => p.title))
+    return response.products
+  } catch (error) {
+    console.error('Error fetching products by category handle:', error)
+    return []
   }
 })

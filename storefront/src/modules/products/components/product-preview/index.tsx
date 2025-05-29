@@ -29,21 +29,91 @@ export default async function ProductPreview({
     product: pricedProduct,
   })
 
+  // Check if product has multiple variants
+  const hasMultipleVariants = product.variants && product.variants.length > 1
+
+  // Mock data for enhanced display - in real implementation, this would come from product data
+  const mockRating = 4.5
+  // Use product ID to generate consistent review count (no Math.random to avoid hydration errors)
+  const mockReviewCount = product.id ? (parseInt(product.id.slice(-2), 16) % 50) + 5 : 25
+  const isNew = product.created_at ? new Date(product.created_at) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) : false
+  const hasOffer = cheapestPrice?.price_type === "sale"
+
   return (
     <LocalizedClientLink href={`/products/${product.handle}`} className="group">
-      <div data-testid="product-wrapper">
-        <Thumbnail
-          thumbnail={product.thumbnail}
-          images={product.images}
-          size="full"
-          isFeatured={isFeatured}
-        />
-        <div className="flex txt-compact-medium mt-4 justify-between">
-          <Text className="text-ui-fg-subtle" data-testid="product-title">
+      <div className="transition-all duration-300 group-hover:scale-[1.02]" data-testid="product-wrapper">
+        {/* Product Image with Badges */}
+        <div className="relative mb-4">
+          <Thumbnail
+            thumbnail={product.thumbnail}
+            images={product.images}
+            size="square"
+            isFeatured={isFeatured}
+            className="!p-0 !bg-transparent !shadow-none !rounded-xl overflow-hidden"
+          />
+          
+          {/* Badges */}
+          <div className="absolute top-3 left-3 flex flex-col gap-2">
+            {isNew && (
+              <span className="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                New!
+              </span>
+            )}
+            {hasOffer && (
+              <span className="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                Offer
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Product Info - Outside of image */}
+        <div className="space-y-2">
+          {/* Product Title */}
+          <h3 className="font-bold text-lg text-gray-800 line-clamp-2 group-hover:text-pink-600 transition-colors duration-200" data-testid="product-title">
             {product.title}
-          </Text>
-          <div className="flex items-center gap-x-2">
-            {cheapestPrice && <PreviewPrice price={cheapestPrice} />}
+          </h3>
+
+          {/* Star Rating */}
+          <div className="flex items-center gap-2">
+            <div className="flex items-center">
+              {[...Array(5)].map((_, i) => (
+                <svg
+                  key={i}
+                  className={`w-4 h-4 ${
+                    i < Math.floor(mockRating)
+                      ? 'text-yellow-400'
+                      : i < mockRating
+                      ? 'text-yellow-400'
+                      : 'text-gray-300'
+                  }`}
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              ))}
+            </div>
+            <span className="text-sm text-gray-600">{mockReviewCount} reviews</span>
+          </div>
+
+          {/* Price */}
+          <div className="flex items-center gap-2">
+            {cheapestPrice && (
+              <div className="flex items-baseline gap-1">
+                {hasMultipleVariants && (
+                  <span className="text-sm text-gray-500">from</span>
+                )}
+                <span className="text-2xl font-bold text-gray-900">
+                  {cheapestPrice.calculated_price}
+                </span>
+              </div>
+            )}
+            {hasOffer && cheapestPrice?.original_price && (
+              <span className="text-lg text-gray-500 line-through">
+                {cheapestPrice.original_price}
+              </span>
+            )}
           </div>
         </div>
       </div>

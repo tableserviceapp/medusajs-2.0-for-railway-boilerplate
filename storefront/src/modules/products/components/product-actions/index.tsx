@@ -36,7 +36,8 @@ export default function ProductActions({
 }: ProductActionsProps) {
   const [options, setOptions] = useState<Record<string, string | undefined>>({})
   const [isAdding, setIsAdding] = useState(false)
-  const countryCode = useParams().countryCode as string
+  const params = useParams()
+  const countryCode = params?.countryCode as string
 
   // If there is only 1 variant, preselect the options
   useEffect(() => {
@@ -110,10 +111,17 @@ export default function ProductActions({
 
   return (
     <>
-      <div className="flex flex-col gap-y-2" ref={actionsRef}>
+      <div className="flex flex-col gap-y-6" ref={actionsRef}>
+        
+        {/* Product Price */}
+        <div className="border-b border-gray-200 pb-4">
+          <ProductPrice product={product} variant={selectedVariant} />
+        </div>
+
+        {/* Product Options */}
         <div>
           {(product.variants?.length ?? 0) > 1 && (
-            <div className="flex flex-col gap-y-4">
+            <div className="space-y-6">
               {(product.options || []).map((option) => {
                 return (
                   <div key={option.id}>
@@ -128,18 +136,34 @@ export default function ProductActions({
                   </div>
                 )
               })}
-              <Divider />
             </div>
           )}
         </div>
 
-        <ProductPrice product={product} variant={selectedVariant} />
+        {/* Quantity Selector */}
+        <div className="flex items-center space-x-4">
+          <span className="text-gray-700 font-medium">Quantity:</span>
+          <div className="flex items-center border border-gray-300 rounded-lg">
+            <button className="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-gray-800 hover:bg-gray-50 transition-colors duration-200">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+              </svg>
+            </button>
+            <span className="w-12 text-center font-medium">1</span>
+            <button className="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-gray-800 hover:bg-gray-50 transition-colors duration-200">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+            </button>
+          </div>
+        </div>
 
+        {/* Add to Cart Button */}
         <Button
           onClick={handleAddToCart}
           disabled={!inStock || !selectedVariant || !!disabled || isAdding}
           variant="primary"
-          className="w-full h-10"
+          className="w-full h-12 bg-pink-500 hover:bg-pink-600 text-white font-semibold rounded-full transition-colors duration-200"
           isLoading={isAdding}
           data-testid="add-product-button"
         >
@@ -147,8 +171,9 @@ export default function ProductActions({
             ? "Select variant"
             : !inStock
             ? "Out of stock"
-            : "Add to cart"}
+            : "ADD TO CART"}
         </Button>
+
         <MobileActions
           product={product}
           variant={selectedVariant}

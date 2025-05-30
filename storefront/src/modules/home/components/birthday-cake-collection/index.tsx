@@ -1,149 +1,84 @@
 "use client"
 
-import { useRef, useState, useEffect } from "react"
+import { useRef } from "react"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { HttpTypes } from "@medusajs/types"
 import { getProductPrice } from "@lib/util/get-product-price"
 
-interface TrendingTreatsProps {
+interface BirthdayCakeCollectionProps {
   products?: HttpTypes.StoreProduct[]
 }
 
-const TrendingTreats = ({ products = [] }: TrendingTreatsProps) => {
+const BirthdayCakeCollection = ({ products = [] }: BirthdayCakeCollectionProps) => {
   const scrollRef = useRef<HTMLDivElement>(null)
-  const [currentIndex, setCurrentIndex] = useState(0)
 
   const scrollLeft = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollLeft -= 408
+      scrollRef.current.scrollLeft -= 400
     }
   }
 
   const scrollRight = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollLeft += 408
+      scrollRef.current.scrollLeft += 400
     }
   }
-
-  const scrollToIndex = (index: number) => {
-    if (scrollRef.current) {
-      const scrollAmount = index * 408
-      scrollRef.current.scrollTo({
-        left: scrollAmount,
-        behavior: 'smooth'
-      })
-    }
-  }
-
-  // Track scroll position to update active dot
-  useEffect(() => {
-    const handleScroll = () => {
-      if (scrollRef.current) {
-        const scrollLeft = scrollRef.current.scrollLeft
-        const newIndex = Math.round(scrollLeft / 408)
-        setCurrentIndex(newIndex)
-      }
-    }
-
-    const scrollElement = scrollRef.current
-    if (scrollElement) {
-      scrollElement.addEventListener('scroll', handleScroll)
-      return () => scrollElement.removeEventListener('scroll', handleScroll)
-    }
-  }, [])
 
   // Fallback products if no real products are provided
   const fallbackProducts = [
     {
-      name: "Mixed Mini Brownie Box",
-      price: "£17.99",
-      originalPrice: "£22.99",
-      rating: 4.5,
-      reviews: 601,
-      image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=500&h=500&fit=crop",
-      badge: "Add A Gifting Sleeve",
-      href: "/categories/trending-treats"
-    },
-    {
-      name: "Passionfruit And Pistachio Cake",
-      price: "£28.99",
-      rating: 4.8,
-      reviews: 428,
-      image: "https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=500&h=500&fit=crop",
-      badge: "Add A Gifting Sleeve",
-      href: "/categories/trending-treats"
-    },
-    {
-      name: "Chocolate Fudge Caramel Cake",
-      price: "£28.99",
-      rating: 4.7,
-      reviews: 280,
-      image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=500&h=500&fit=crop",
-      badge: "Add A Gifting Sleeve",
-      href: "/categories/trending-treats"
-    },
-    {
-      name: "Happy Birthday Celebration Box",
-      price: "£19.99",
-      rating: 4.9,
-      reviews: 164,
-      image: "https://images.unsplash.com/photo-1558636508-e0db3814bd1d?w=500&h=500&fit=crop",
-      badge: "Add A Gifting Sleeve",
-      href: "/categories/trending-treats"
-    },
-    {
-      name: "Vegan Carrot Cake",
+      name: "Classic Birthday Cake",
       price: "£24.99",
-      rating: 4.6,
-      reviews: 195,
-      image: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=500&h=500&fit=crop",
-      badge: "Add A Gifting Sleeve",
-      href: "/categories/trending-treats"
-    },
-    {
-      name: "Strawberry Shortcake",
-      price: "£26.99",
       rating: 4.8,
-      reviews: 312,
-      image: "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=500&h=500&fit=crop",
-      badge: "Add A Gifting Sleeve",
-      href: "/categories/trending-treats"
+      reviews: 156,
+      image: "https://images.unsplash.com/photo-1558636508-e0db3814bd1d?w=500&h=500&fit=crop",
+      description: "Classic vanilla sponge with colorful buttercream",
+      href: "/categories/birthday-cakes"
     },
     {
-      name: "Lemon Drizzle Cake",
-      price: "£22.99",
+      name: "Chocolate Birthday Cake",
+      price: "£26.99",
+      rating: 4.9,
+      reviews: 203,
+      image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=500&h=500&fit=crop",
+      description: "Rich chocolate cake with birthday decorations",
+      href: "/categories/birthday-cakes"
+    },
+    {
+      name: "Rainbow Birthday Cake",
+      price: "£28.99",
       rating: 4.7,
       reviews: 189,
-      image: "https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=500&h=500&fit=crop",
-      badge: "Add A Gifting Sleeve",
-      href: "/categories/trending-treats"
+      image: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=500&h=500&fit=crop",
+      description: "Colorful rainbow layers with vanilla frosting",
+      href: "/categories/birthday-cakes"
     },
     {
-      name: "Chocolate Brownie Stack",
-      price: "£25.99",
+      name: "Unicorn Birthday Cake",
+      price: "£32.99",
       rating: 4.9,
-      reviews: 267,
+      reviews: 142,
       image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=500&h=500&fit=crop",
-      badge: "Add A Gifting Sleeve",
-      href: "/categories/trending-treats"
+      description: "Magical unicorn themed birthday cake",
+      href: "/categories/birthday-cakes"
     },
     {
-      name: "Victoria Sponge Cake",
-      price: "£21.99",
-      rating: 4.6,
-      reviews: 143,
-      image: "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=500&h=500&fit=crop",
-      badge: "Add A Gifting Sleeve",
-      href: "/categories/trending-treats"
-    },
-    {
-      name: "Red Velvet Cupcakes",
-      price: "£18.99",
+      name: "Princess Birthday Cake",
+      price: "£29.99",
       rating: 4.8,
-      reviews: 298,
-      image: "https://images.unsplash.com/photo-1587668178277-295251f900ce?w=500&h=500&fit=crop",
-      badge: "Add A Gifting Sleeve",
-      href: "/categories/trending-treats"
+      reviews: 167,
+      image: "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=500&h=500&fit=crop",
+      description: "Beautiful princess themed celebration cake",
+      href: "/categories/birthday-cakes"
+    },
+    {
+      name: "Superhero Birthday Cake",
+      price: "£31.99",
+      rating: 4.7,
+      reviews: 134,
+      image: "https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=500&h=500&fit=crop",
+      description: "Action-packed superhero themed cake",
+      href: "/categories/birthday-cakes"
     }
   ]
 
@@ -154,7 +89,13 @@ const TrendingTreats = ({ products = [] }: TrendingTreatsProps) => {
     <section className="py-16 bg-white">
       <div className="content-container">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-4xl font-bold text-gray-900">TRENDING TREATS</h2>
+          <div>
+            <h2 className="text-4xl font-bold text-gray-900 flex items-center gap-3">
+              <span className="text-4xl">🎂</span>
+              BIRTHDAY CAKE COLLECTION
+            </h2>
+            <p className="text-lg text-pink-600 mt-2">Perfect birthday cakes to make every celebration special!</p>
+          </div>
           <div className="flex items-center space-x-2">
             <button 
               onClick={scrollLeft}
@@ -185,14 +126,7 @@ const TrendingTreats = ({ products = [] }: TrendingTreatsProps) => {
             const isRealProduct = 'id' in product
             const productName = isRealProduct ? (product as HttpTypes.StoreProduct).title : (product as any).name
             const productImage = isRealProduct 
-              ? (() => {
-                  const realProduct = product as HttpTypes.StoreProduct
-                  // Override image for baby sponge cakes
-                  if (realProduct.title?.toLowerCase().includes('baby sponge')) {
-                    return "https://bucket-production-47b2.up.railway.app/medusa-media/647539be66280b48828ad1d1eb3e4cf1-01JW11BNQYS2ZE2JG69XQHKH1C.jpg"
-                  }
-                  return realProduct.thumbnail || realProduct.images?.[0]?.url || "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400&h=300&fit=crop"
-                })()
+              ? (product as HttpTypes.StoreProduct).thumbnail || (product as HttpTypes.StoreProduct).images?.[0]?.url || "https://images.unsplash.com/photo-1558636508-e0db3814bd1d?w=400&h=300&fit=crop"
               : (product as any).image
             const productHref = isRealProduct 
               ? `/products/${(product as HttpTypes.StoreProduct).handle}`
@@ -211,10 +145,10 @@ const TrendingTreats = ({ products = [] }: TrendingTreatsProps) => {
                   return 'Price on request'
                 })()
               : (product as any).price
-            const productRating = isRealProduct ? 4.5 : (product as any).rating
+            const productRating = isRealProduct ? 4.7 : (product as any).rating
             // Use product ID to generate consistent review count (no Math.random to avoid hydration errors)
             const productReviews = isRealProduct 
-              ? ((product as HttpTypes.StoreProduct).id ? (parseInt((product as HttpTypes.StoreProduct).id!.slice(-2), 16) % 400) + 100 : 250)
+              ? ((product as HttpTypes.StoreProduct).id ? (parseInt((product as HttpTypes.StoreProduct).id!.slice(-2), 16) % 250) + 75 : 175)
               : (product as any).reviews
 
             return (
@@ -227,8 +161,8 @@ const TrendingTreats = ({ products = [] }: TrendingTreatsProps) => {
                       className="w-full aspect-square object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     <div className="absolute top-3 left-3">
-                      <span className="bg-orange-500 text-white px-3 py-1 rounded-full text-xs font-medium shadow-lg">
-                        Trending
+                      <span className="bg-pink-500 text-white px-3 py-1 rounded-full text-xs font-medium shadow-lg">
+                        Birthday
                       </span>
                     </div>
                   </div>
@@ -259,11 +193,6 @@ const TrendingTreats = ({ products = [] }: TrendingTreatsProps) => {
                       <span className="text-base font-normal text-gray-900">
                         {productPrice}
                       </span>
-                      {!isRealProduct && (product as any).originalPrice && (
-                        <span className="text-sm text-gray-500 line-through">
-                          {(product as any).originalPrice}
-                        </span>
-                      )}
                     </div>
                   </div>
                 </div>
@@ -275,20 +204,31 @@ const TrendingTreats = ({ products = [] }: TrendingTreatsProps) => {
         {/* Scroll Indicator */}
         <div className="flex justify-center mt-6">
           <div className="flex space-x-2">
-            {displayProducts.slice(0, Math.min(displayProducts.length, 6)).map((_, index) => (
-              <button
+            {[...Array(Math.min(displayProducts.length, 6))].map((_, index) => (
+              <div
                 key={index}
-                className={`w-2 h-2 rounded-full transition-colors duration-200 cursor-pointer hover:scale-125 ${
-                  index === currentIndex ? 'bg-pink-500' : 'bg-gray-300 hover:bg-gray-400'
+                className={`w-2 h-2 rounded-full transition-colors duration-200 ${
+                  index === 0 ? 'bg-pink-500' : 'bg-gray-300'
                 }`}
-                onClick={() => scrollToIndex(index)}
               />
             ))}
           </div>
+        </div>
+        
+        {/* View All Button */}
+        <div className="text-center mt-8">
+          <LocalizedClientLink href="/store?category=birthday-cakes">
+            <button className="inline-flex items-center px-6 py-3 bg-pink-600 text-white font-bold rounded-full hover:bg-pink-700 transition-all duration-200 hover:scale-[1.02] shadow-lg">
+              View All Birthday Cakes
+              <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </button>
+          </LocalizedClientLink>
         </div>
       </div>
     </section>
   )
 }
 
-export default TrendingTreats 
+export default BirthdayCakeCollection 

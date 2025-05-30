@@ -44,12 +44,12 @@ export default async function ProductPreview({
       <div className="transition-all duration-300 group-hover:scale-[1.02]" data-testid="product-wrapper">
         {/* Product Image with Badges */}
         <div className="relative mb-4">
-          <Thumbnail
-            thumbnail={product.thumbnail}
-            images={product.images}
+        <Thumbnail
+          thumbnail={product.thumbnail}
+          images={product.images}
             size="square"
-            isFeatured={isFeatured}
-            className="!p-0 !bg-transparent !shadow-none !rounded-xl overflow-hidden"
+          isFeatured={isFeatured}
+            className="!p-0 !bg-transparent !shadow-none !rounded-none overflow-hidden"
           />
           
           {/* Badges */}

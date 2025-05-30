@@ -47,7 +47,7 @@ const AccountLayout: React.FC<AccountLayoutProps> = ({
                     <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-orange-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
                       {customer.first_name?.charAt(0)?.toUpperCase() || 'U'}
                     </div>
-                    <div>
+          <div>
                       <h3 className="font-bold text-gray-800">{customer.first_name} {customer.last_name}</h3>
                       <p className="text-sm text-gray-600">{customer.email}</p>
                     </div>
@@ -87,13 +87,13 @@ const AccountLayout: React.FC<AccountLayoutProps> = ({
                   <p className="text-gray-600 text-lg">
                     Find answers to frequently asked questions and get support from our customer service team.
                   </p>
-                </div>
-                <div>
-                  <UnderlineLink href="/customer-service">
+          </div>
+          <div>
+            <UnderlineLink href="/customer-service">
                     <button className="px-8 py-3 bg-gradient-to-r from-pink-500 to-orange-500 text-white font-bold rounded-full hover:from-pink-600 hover:to-orange-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
                       Contact Support
                     </button>
-                  </UnderlineLink>
+            </UnderlineLink>
                 </div>
               </div>
             </div>

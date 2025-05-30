@@ -27,16 +27,16 @@ export default async function Nav() {
       <PromoBanner />
       
       {/* Main Header */}
-      <header className="relative bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-lg">
+      <header className="relative bg-white/95 backdrop-blur-md">
         {/* Top Row: Logo, Search, Account/Cart */}
-        <div className="content-container">
+        <div className="content-container pt-3">
           <div className="flex items-center justify-between w-full h-20 lg:h-24">
             {/* Mobile Menu Button & Logo */}
             <div className="flex items-center gap-4">
               <div className="flex items-center lg:hidden">
                 <SideMenu regions={regions} />
               </div>
-              <div className="flex items-center">
+              <div className="flex items-center mt-2">
                 <Logo className="hover:scale-105 transition-transform duration-200" />
               </div>
             </div>
@@ -95,7 +95,7 @@ export default async function Nav() {
         </div>
 
         {/* Bottom Row: Main Navigation */}
-        <div className="hidden lg:block border-t border-gray-100">
+        <div className="hidden lg:block">
           <div className="content-container">
             <nav className="flex items-center justify-center space-x-8 py-4">
               {/* Home Link */}
@@ -185,7 +185,7 @@ export default async function Nav() {
         </div>
 
         {/* Mobile Search Bar */}
-        <div className="md:hidden border-t border-gray-100">
+        <div className="md:hidden">
           <div className="content-container py-3">
             <div className="relative">
               <input

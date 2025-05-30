@@ -22,20 +22,20 @@ const Register = ({ setCurrentView }: Props) => {
       <form className="w-full space-y-6" action={formAction}>
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input
-              label="First name"
-              name="first_name"
-              required
-              autoComplete="given-name"
-              data-testid="first-name-input"
-            />
-            <Input
-              label="Last name"
-              name="last_name"
-              required
-              autoComplete="family-name"
-              data-testid="last-name-input"
-            />
+          <Input
+            label="First name"
+            name="first_name"
+            required
+            autoComplete="given-name"
+            data-testid="first-name-input"
+          />
+          <Input
+            label="Last name"
+            name="last_name"
+            required
+            autoComplete="family-name"
+            data-testid="last-name-input"
+          />
           </div>
           
           <Input
@@ -68,7 +68,7 @@ const Register = ({ setCurrentView }: Props) => {
         {/* Error Message */}
         {message && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-            <ErrorMessage error={message} data-testid="register-error" />
+        <ErrorMessage error={message} data-testid="register-error" />
           </div>
         )}
 
@@ -76,20 +76,20 @@ const Register = ({ setCurrentView }: Props) => {
         <div className="bg-gray-50 rounded-lg p-4 text-sm text-gray-600">
           <p className="text-center">
             By creating an account, you agree to our{" "}
-            <LocalizedClientLink
-              href="/content/privacy-policy"
+          <LocalizedClientLink
+            href="/content/privacy-policy"
               className="text-pink-500 hover:text-pink-600 font-medium underline"
-            >
-              Privacy Policy
-            </LocalizedClientLink>{" "}
-            and{" "}
-            <LocalizedClientLink
-              href="/content/terms-of-use"
+          >
+            Privacy Policy
+          </LocalizedClientLink>{" "}
+          and{" "}
+          <LocalizedClientLink
+            href="/content/terms-of-use"
               className="text-pink-500 hover:text-pink-600 font-medium underline"
-            >
-              Terms of Use
-            </LocalizedClientLink>
-            .
+          >
+            Terms of Use
+          </LocalizedClientLink>
+          .
           </p>
         </div>
 

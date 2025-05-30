@@ -10,12 +10,12 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
     <div id="product-info">
       <div className="space-y-4">
         {product.description && (
-          <Text
+        <Text
             className="text-gray-600 leading-relaxed"
-            data-testid="product-description"
-          >
-            {product.description}
-          </Text>
+          data-testid="product-description"
+        >
+          {product.description}
+        </Text>
         )}
       </div>
     </div>

@@ -41,7 +41,7 @@ const Login = ({ setCurrentView }: Props) => {
         {/* Error Message */}
         {message && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-            <ErrorMessage error={message} data-testid="login-error-message" />
+        <ErrorMessage error={message} data-testid="login-error-message" />
           </div>
         )}
 

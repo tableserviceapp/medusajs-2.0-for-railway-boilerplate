@@ -6,6 +6,13 @@ import PaginatedProducts from "@modules/store/templates/paginated-products"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { HttpTypes } from "@medusajs/types"
 
+// Function to capitalize first letter of each word
+function capitalizeWords(str: string): string {
+  return str.split(' ').map(word => 
+    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+  ).join(' ')
+}
+
 export default function CategoryTemplate({
   categories,
   page,
@@ -25,7 +32,7 @@ export default function CategoryTemplate({
   return (
     <div className="bg-white min-h-screen">
       {/* Enhanced Breadcrumbs */}
-      <div className="bg-gray-50 border-b border-gray-200">
+      <div className="bg-white">
         <div className="content-container py-4">
           <nav className="flex items-center space-x-2 text-sm" aria-label="Breadcrumb">
             <LocalizedClientLink
@@ -44,30 +51,26 @@ export default function CategoryTemplate({
                   href={`/categories/${parent.handle}`}
                   data-testid="sort-by-link"
                 >
-                  {parent.name}
+                  {capitalizeWords(parent.name)}
                 </LocalizedClientLink>
                 <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
                 </svg>
               </div>
             ))}
-            <span className="text-gray-800 font-semibold">{category.name}</span>
+            <span className="text-gray-800 font-semibold">{capitalizeWords(category.name)}</span>
           </nav>
         </div>
       </div>
 
       {/* Polished Title Header */}
-      <div className="bg-white py-16 border-b border-gray-100">
+      <div className="bg-white py-8 border-b border-gray-100">
         <div className="content-container">
           <div className="text-center max-w-4xl mx-auto">
             {/* Category Title with Enhanced Animation */}
-            <div className="mb-8">
-              <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 relative inline-block group" data-testid="category-page-title">
-                {category.name}
-                {/* Enhanced Animated Underline */}
-                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-0 h-1 bg-gradient-to-r from-pink-500 via-pink-400 to-orange-500 transition-all duration-500 ease-out group-hover:w-full rounded-full shadow-lg"></div>
-                {/* Subtle glow effect */}
-                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-0 h-1 bg-gradient-to-r from-pink-500 via-pink-400 to-orange-500 transition-all duration-500 ease-out group-hover:w-full rounded-full blur-sm opacity-50"></div>
+            <div className="mb-4">
+              <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-4 relative inline-block" data-testid="category-page-title">
+                {capitalizeWords(category.name)}
               </h1>
               
               {/* Enhanced Subtitle */}
@@ -84,29 +87,13 @@ export default function CategoryTemplate({
                 )}
               </div>
             </div>
-
-            {/* Category Stats */}
-            <div className="flex justify-center items-center space-x-8 text-sm text-gray-500">
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                <span>Fresh Daily</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                <span>Premium Quality</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
-                <span>Fast Delivery</span>
-              </div>
-            </div>
           </div>
         </div>
       </div>
 
       {/* Beautiful Filter Dropdowns */}
       <div className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
-        <div className="content-container py-4">
+        <div className="content-container py-3">
           <div className="flex items-center justify-between">
             {/* Location Toggle */}
             <div className="flex items-center space-x-4">
@@ -242,15 +229,15 @@ export default function CategoryTemplate({
                       </svg>
                     </div>
                     <h3 className="font-semibold text-gray-800 group-hover:text-pink-600 transition-colors duration-200">
-                      {c.name}
+                    {c.name}
                     </h3>
                   </div>
                 </LocalizedClientLink>
               ))}
             </div>
           </div>
-        </div>
-      )}
+          </div>
+        )}
 
       {/* Products Grid */}
       <div className="content-container py-8" data-testid="category-container">

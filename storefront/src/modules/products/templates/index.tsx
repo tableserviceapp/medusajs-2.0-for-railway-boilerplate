@@ -64,76 +64,16 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
       <div className="bg-white">
         <div className="content-container py-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
-            {/* Left Sidebar - Thumbnail Images */}
-            <div className="lg:col-span-2">
-              <div className="flex lg:flex-col gap-4 overflow-x-auto lg:overflow-x-visible">
-                {product?.images?.map((image, index) => (
-                  <div
-                    key={image.id}
-                    className="flex-shrink-0 w-20 h-20 lg:w-full lg:h-24 bg-gray-100 rounded-lg overflow-hidden cursor-pointer hover:ring-2 hover:ring-pink-500 transition-all duration-200"
-                  >
-                    {image.url && (
-                      <img
-                        src={image.url}
-                        alt={`Product thumbnail ${index + 1}`}
-                        className="w-full h-full object-cover"
-                      />
-                    )}
-                  </div>
-                ))}
-              </div>
+            {/* Left Side - Product Images */}
+            <div className="lg:col-span-7">
+              <ImageGallery images={product.images || []} />
             </div>
 
-            {/* Center - Main Product Image */}
-            <div className="lg:col-span-6">
-              <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden">
-                {product?.images?.[0]?.url && (
-                  <img
-                    src={product.images[0].url}
-                    alt={product.title}
-                    className="w-full h-full object-cover"
-                  />
-                )}
-                
-                {/* Add A Gifting Sleeve Badge */}
-                <div className="absolute top-4 left-4">
-                  <span className="bg-gray-600 text-white px-3 py-1 rounded-full text-sm font-medium">
-                    Add A Gifting Sleeve
-                  </span>
-                </div>
-
-                {/* Zoom Icon */}
-                <div className="absolute bottom-4 right-4">
-                  <button className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow duration-200">
-                    <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
-                    </svg>
-                  </button>
-                </div>
-
-                {/* Image Dots Indicator */}
-                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
-                  <div className="flex space-x-2">
-                    {product?.images?.map((_, index) => (
-                      <div
-                        key={index}
-                        className={`w-2 h-2 rounded-full ${
-                          index === 0 ? 'bg-pink-500' : 'bg-gray-300'
-                        }`}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Sidebar - Product Details */}
-            <div className="lg:col-span-4">
-              <div className="space-y-6">
-                
+            {/* Right Side - Product Info */}
+            <div className="lg:col-span-5">
+              <div className="sticky top-8">
                 {/* Product Title and Badges */}
-                <div>
+                <div className="mb-6">
                   <h1 className="text-3xl font-bold text-gray-900 mb-2">
                     {product.title}
                   </h1>
@@ -167,7 +107,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
                 <ProductInfo product={product} />
 
                 {/* Product Actions */}
-                <div className="border-t border-gray-200 pt-6">
+                <div className="mt-8">
                   <Suspense
                     fallback={
                       <ProductActions
@@ -182,7 +122,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
                 </div>
 
                 {/* Additional Features */}
-                <div className="border-t border-gray-200 pt-6 space-y-4">
+                <div className="mt-8 space-y-4">
                   <div className="flex items-center space-x-3 text-sm text-gray-600">
                     <svg className="w-5 h-5 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
@@ -195,29 +135,23 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <span>Order by 4.00pm for next day delivery from £5.95</span>
-                    <button className="text-pink-600 hover:text-pink-700 font-medium">
-                      Check delivery to your area
-                    </button>
                   </div>
-                </div>
-
-                {/* Product Tabs */}
-                <div className="border-t border-gray-200 pt-6">
-                  <ProductTabs product={product} />
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Frequently Bought With Section */}
-      <div className="bg-rose-50 py-12">
-        <div className="content-container">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8">Frequently Bought With</h2>
-          <Suspense fallback={<SkeletonRelatedProducts />}>
-            <RelatedProducts product={product} countryCode={countryCode} />
-          </Suspense>
+          {/* Product Tabs */}
+          <div className="mt-16">
+            <ProductTabs product={product} />
+          </div>
+
+          {/* Related Products */}
+          <div className="mt-16">
+            <Suspense fallback={<SkeletonRelatedProducts />}>
+              <RelatedProducts product={product} countryCode={countryCode} />
+            </Suspense>
+          </div>
         </div>
       </div>
     </>

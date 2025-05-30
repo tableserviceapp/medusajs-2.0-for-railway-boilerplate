@@ -3,87 +3,83 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 
 const Hero = () => {
   return (
-    <div className="content-container py-4 lg:py-6">
-      <div className="group relative h-[580px] w-full overflow-hidden bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 rounded-2xl lg:rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-500 cursor-pointer">
-        {/* White outline inside the banner */}
-        <div className="absolute inset-4 border-4 border-white rounded-xl lg:rounded-2xl pointer-events-none z-20 group-hover:border-white/90 transition-colors duration-300"></div>
+    <div className="content-container py-6 lg:py-8">
+      <div className="group relative h-[600px] lg:h-[650px] w-full overflow-hidden bg-gradient-to-br from-pink-50 via-white to-orange-50 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-700">
         
-        {/* Background Image */}
+        {/* Background Image with Gradient Overlay */}
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat rounded-2xl lg:rounded-3xl transition-transform duration-700 group-hover:scale-105"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat rounded-3xl transition-transform duration-1000 group-hover:scale-105"
           style={{
-            backgroundImage: `url('/mainbanneropt.webp')`
+            backgroundImage: `linear-gradient(135deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.05) 50%, rgba(0,0,0,0.1) 100%), url('/mainbanner.avif')`,
+            backgroundPosition: 'center left'
           }}
-        >
-          {/* Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/25 to-black/20 rounded-2xl lg:rounded-3xl group-hover:from-black/30 group-hover:via-black/15 group-hover:to-black/10 transition-all duration-500"></div>
-        </div>
+        />
 
-        {/* Content */}
-        <div className="relative z-10 flex items-center h-full px-6 sm:px-8 lg:px-16">
-          <div className="max-w-3xl">
-            {/* Main Headline */}
-            <Heading
-              level="h1"
-              className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black mb-4 lg:mb-6 text-white leading-tight drop-shadow-2xl transform group-hover:translate-y-[-4px] transition-transform duration-500"
+        {/* Decorative Elements */}
+        <div className="absolute top-8 right-8 w-32 h-32 bg-gradient-to-br from-pink-200/30 to-orange-200/30 rounded-full blur-2xl animate-pulse hidden lg:block" />
+        <div className="absolute bottom-16 right-16 w-24 h-24 bg-gradient-to-br from-yellow-200/20 to-pink-200/20 rounded-full blur-xl animate-pulse delay-1000 hidden lg:block" />
+        <div className="absolute top-1/3 left-8 w-16 h-16 bg-gradient-to-br from-white/20 to-pink-100/20 rounded-full blur-lg animate-pulse delay-500 hidden lg:block" />
+
+        {/* Content Container */}
+        <div className="relative z-10 h-full flex flex-col justify-end p-8 lg:p-12">
+          
+          {/* Main Content - Bottom Left */}
+          <div className="max-w-2xl">
+          {/* Main Headline */}
+          <Heading
+            level="h1"
+              className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black mb-4 lg:mb-6 text-white leading-tight"
+              style={{ 
+                textShadow: '3px 3px 0px rgba(0,0,0,0.8), 6px 6px 12px rgba(0,0,0,0.6), 0px 0px 20px rgba(0,0,0,0.4)' 
+              }}
             >
-              <span className="inline-block group-hover:scale-105 transition-transform duration-300">
+              <span className="block mb-2">
                 Delicious Door
               </span>
-              <br />
-              <span className="text-white drop-shadow-lg inline-block group-hover:scale-105 transition-transform duration-300 delay-75">
+              <span className="block">
                 Deliveries
               </span>
-            </Heading>
+          </Heading>
             
-            {/* Subheadline */}
-            <p className="text-lg sm:text-xl lg:text-2xl text-white/95 font-medium mb-6 lg:mb-8 leading-relaxed drop-shadow-lg max-w-2xl transform group-hover:translate-y-[-2px] transition-transform duration-500 delay-100">
-              Premium baby sponge cakes & treats delivered fresh to your door. Perfect for birthdays, celebrations, and sweet moments.
+            {/* Elegant Divider */}
+            <div className="w-24 h-1 bg-white rounded-full mb-6 lg:mb-8 shadow-lg" />
+          
+          {/* Subheadline */}
+            <p 
+              className="text-lg lg:text-xl text-white font-semibold mb-8 lg:mb-10 leading-relaxed max-w-lg"
+              style={{ 
+                textShadow: '2px 2px 0px rgba(0,0,0,0.8), 4px 4px 8px rgba(0,0,0,0.6)' 
+              }}
+          >
+              Premium handcrafted cakes & treats delivered fresh to your door. 
+              <span className="block mt-2 text-pink-100 font-bold">Perfect for every celebration.</span>
             </p>
 
-            {/* Single CTA Button */}
-            <div className="mb-8 transform group-hover:translate-y-[-2px] transition-transform duration-500 delay-150">
-              <LocalizedClientLink href="/store">
-                <Button className="text-lg px-8 py-4 bg-white text-gray-900 hover:bg-pink-500 hover:text-white font-bold rounded-full shadow-xl hover:shadow-2xl hover:scale-110 transition-all duration-300 border-2 border-white hover:border-pink-500 group-hover:animate-pulse">
-                  <span className="flex items-center gap-2">
+          {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4">
+            <LocalizedClientLink href="/store">
+                <Button className="group/btn text-lg px-8 py-4 bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white font-bold rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 border-0">
+                  <span className="flex items-center gap-3">
                     Shop Now
-                    <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 transform group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                     </svg>
                   </span>
-                </Button>
-              </LocalizedClientLink>
-            </div>
-
-            {/* Trust Indicators */}
-            <div className="flex flex-wrap items-center gap-4 text-white/80 text-sm font-medium transform group-hover:translate-y-[-2px] transition-transform duration-500 delay-200">
-              <div className="flex items-center gap-2 group-hover:text-white transition-colors duration-300">
-                <span className="text-green-400 group-hover:scale-110 transition-transform duration-300">✓</span>
-                <span>Fresh Daily</span>
-              </div>
-              <div className="flex items-center gap-2 group-hover:text-white transition-colors duration-300 delay-75">
-                <span className="text-green-400 group-hover:scale-110 transition-transform duration-300">✓</span>
-                <span>Free Delivery £39.50+</span>
-              </div>
-              <div className="flex items-center gap-2 group-hover:text-white transition-colors duration-300 delay-150">
-                <span className="text-green-400 group-hover:scale-110 transition-transform duration-300">✓</span>
-                <span>Next Day Delivery</span>
-              </div>
+              </Button>
+            </LocalizedClientLink>
             </div>
           </div>
         </div>
 
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 animate-bounce group-hover:animate-pulse">
-          <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center backdrop-blur-sm group-hover:border-white/70 transition-colors duration-300">
-            <div className="w-1 h-3 bg-white/70 rounded-full mt-2 animate-pulse group-hover:bg-white transition-colors duration-300"></div>
-          </div>
+        {/* Floating Action Hint */}
+        <div className="absolute bottom-8 right-8 hidden lg:block">
+          <div className="flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm rounded-full shadow-lg animate-bounce">
+            <span className="text-sm font-medium text-gray-700">Scroll to explore</span>
+            <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+      </div>
         </div>
-
-        {/* Floating Elements for Extra Polish */}
-        <div className="absolute top-20 right-20 w-4 h-4 bg-white/20 rounded-full animate-pulse group-hover:scale-150 transition-transform duration-500 hidden lg:block"></div>
-        <div className="absolute bottom-32 right-32 w-2 h-2 bg-white/30 rounded-full animate-pulse group-hover:scale-200 transition-transform duration-700 delay-200 hidden lg:block"></div>
-        <div className="absolute top-40 left-20 w-3 h-3 bg-white/15 rounded-full animate-pulse group-hover:scale-125 transition-transform duration-600 delay-100 hidden lg:block"></div>
       </div>
     </div>
   )

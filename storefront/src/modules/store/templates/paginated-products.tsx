@@ -63,27 +63,27 @@ export default async function PaginatedProducts({
   return (
     <div className="bg-white min-h-screen py-8">
       <div className="max-w-7xl mx-auto px-4">
-        <ul
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-          data-testid="products-list"
-        >
-          {products.map((p) => {
-            return (
-              <li key={p.id}>
-                <ProductPreview product={p} region={region} />
-              </li>
-            )
-          })}
-        </ul>
-        {totalPages > 1 && (
+      <ul
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-8"
+        data-testid="products-list"
+      >
+        {products.map((p) => {
+          return (
+            <li key={p.id}>
+              <ProductPreview product={p} region={region} />
+            </li>
+          )
+        })}
+      </ul>
+      {totalPages > 1 && (
           <div className="mt-12 flex justify-center">
-            <Pagination
-              data-testid="product-pagination"
-              page={page}
-              totalPages={totalPages}
-            />
+        <Pagination
+          data-testid="product-pagination"
+          page={page}
+          totalPages={totalPages}
+        />
           </div>
-        )}
+      )}
       </div>
     </div>
   )

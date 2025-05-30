@@ -43,11 +43,11 @@ const LoginTemplate = () => {
 
         {/* Form Content */}
         <div className="bg-white rounded-b-xl shadow-sm border border-gray-200 border-t-0 p-8">
-          {currentView === "sign-in" ? (
-            <Login setCurrentView={setCurrentView} />
-          ) : (
-            <Register setCurrentView={setCurrentView} />
-          )}
+      {currentView === "sign-in" ? (
+        <Login setCurrentView={setCurrentView} />
+      ) : (
+        <Register setCurrentView={setCurrentView} />
+      )}
         </div>
 
         {/* Additional Info */}

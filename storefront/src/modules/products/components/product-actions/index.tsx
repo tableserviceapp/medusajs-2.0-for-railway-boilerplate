@@ -130,6 +130,7 @@ export default function ProductActions({
                       current={options[option.title ?? ""]}
                       updateOption={setOptionValue}
                       title={option.title ?? ""}
+                      product={product}
                       data-testid="product-options"
                       disabled={!!disabled || isAdding}
                     />

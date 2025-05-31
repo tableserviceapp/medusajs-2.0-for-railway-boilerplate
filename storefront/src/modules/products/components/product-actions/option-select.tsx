@@ -56,8 +56,8 @@ const OptionSelect: React.FC<OptionSelectProps> = ({
           </option>
           {filteredOptions?.map((v) => {
             const variant = getVariantForOptionValue(v ?? "")
-            const displayText = variant?.title || `${title}: ${v}`
-            
+            // Always use the variant title if present, otherwise fallback to the option value
+            const displayText = variant?.title && variant.title.trim() !== "" ? variant.title : v
             return (
               <option key={v} value={v ?? ""}>
                 {displayText}

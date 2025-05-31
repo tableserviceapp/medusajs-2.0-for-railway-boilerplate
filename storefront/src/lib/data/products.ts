@@ -5,6 +5,8 @@ import { getRegion } from "./regions"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
 import { sortProducts } from "@lib/util/sort-products"
 
+const PRODUCT_FIELDS = "id,title,description,handle,images,metadata,thumbnail,collection_id,type_id,weight,length,height,width,hs_code,origin_country,mid_code,material,created_at,updated_at,options,tags,variants,variants.title,variants.options,variants.options.option,variants.options.value,*variants.calculated_price,+variants.inventory_quantity"
+
 export const getProductsById = cache(async function ({
   ids,
   regionId,
@@ -12,16 +14,32 @@ export const getProductsById = cache(async function ({
   ids: string[]
   regionId: string
 }) {
-  return sdk.store.product
-    .list(
-      {
-        id: ids,
-        region_id: regionId,
-        fields: "*variants.calculated_price,+variants.inventory_quantity",
-      },
-      { next: { tags: ["products"] } }
-    )
-    .then(({ products }) => products)
+  if (!Array.isArray(ids) || ids.length === 0 || !regionId) {
+    console.error("getProductsById: Invalid ids or regionId", { ids, regionId })
+    console.trace()
+    return []
+  }
+  try {
+    return sdk.store.product
+      .list(
+        {
+          id: ids,
+          region_id: regionId,
+          fields: PRODUCT_FIELDS,
+        },
+        { 
+          expand: 'variants.options.option', 
+          next: { 
+            tags: ["products"],
+            revalidate: 0 // Disable caching to always fetch fresh data
+          } 
+        }
+      )
+      .then(({ products }) => products)
+  } catch (err) {
+    console.error("getProductsById error:", err)
+    return []
+  }
 })
 
 export const getProductByHandle = cache(async function (
@@ -33,9 +51,15 @@ export const getProductByHandle = cache(async function (
       {
         handle,
         region_id: regionId,
-        fields: "*variants.calculated_price,+variants.inventory_quantity",
+        fields: PRODUCT_FIELDS,
       },
-      { next: { tags: ["products"] } }
+      { 
+        expand: 'variants.options.option', 
+        next: { 
+          tags: ["products"],
+          revalidate: 0 // Disable caching to always fetch fresh data
+        } 
+      }
     )
     .then(({ products }) => products[0])
 })
@@ -70,7 +94,7 @@ export const getProductsList = cache(async function ({
         limit,
         offset,
         region_id: region.id,
-        fields: "*variants.calculated_price",
+        fields: PRODUCT_FIELDS,
         ...queryParams,
       },
       { next: { tags: ["products"] } }
@@ -117,6 +141,7 @@ export const getProductsListWithSort = cache(async function ({
     queryParams: {
       ...queryParams,
       limit: 100,
+      fields: PRODUCT_FIELDS,
     },
     countryCode,
   })
@@ -170,6 +195,7 @@ export const getProductsByCategoryHandle = cache(async function (
       queryParams: {
         category_id: [category.id],
         limit,
+        fields: PRODUCT_FIELDS,
       } as any,
       countryCode,
     })

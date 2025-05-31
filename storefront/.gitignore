@@ -55,3 +55,6 @@ dump.rdb
 /blob-report/
 /playwright/.cache/
 /playwright/.auth
+
+# .env.local
+MEDUSA_ADMIN_TOKEN=sk_94fa4c84b9d776ccc83e98f073cb3c97b01af57df98a3eb16734b0dc9900905c

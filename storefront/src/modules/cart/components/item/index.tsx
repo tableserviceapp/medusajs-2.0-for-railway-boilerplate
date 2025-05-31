@@ -24,6 +24,9 @@ const Item = ({ item, type = "full" }: ItemProps) => {
   const [updating, setUpdating] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  // Debug log to check variant data
+  console.log("Cart item variant:", item.variant)
+
   const { handle } = item.variant?.product ?? {}
 
   const changeQuantity = async (quantity: number) => {
@@ -47,8 +50,8 @@ const Item = ({ item, type = "full" }: ItemProps) => {
   const maxQuantity = item.variant?.manage_inventory ? 10 : maxQtyFromInventory
 
   return (
-    <Table.Row className="w-full" data-testid="product-row">
-      <Table.Cell className="!pl-0 p-4 w-24">
+    <Table.Row className="w-full hover:bg-pink-50 transition-colors duration-150 border-b last:border-b-0" data-testid="product-row">
+      <Table.Cell className="!pl-0 p-4 w-24 align-top">
         <LocalizedClientLink
           href={`/products/${handle}`}
           className={clx("flex", {
@@ -60,28 +63,32 @@ const Item = ({ item, type = "full" }: ItemProps) => {
             thumbnail={item.variant?.product?.thumbnail}
             images={item.variant?.product?.images}
             size="square"
+            className="rounded-xl shadow-md border border-gray-100"
           />
         </LocalizedClientLink>
       </Table.Cell>
 
-      <Table.Cell className="text-left">
+      <Table.Cell className="text-left align-top">
         <Text
-          className="txt-medium-plus text-ui-fg-base"
+          className="txt-medium-plus text-gray-900 font-semibold text-lg"
           data-testid="product-title"
         >
           {item.product_title}
         </Text>
+        {item.variant?.title && (
+          <div className="text-gray-700 text-base font-medium mb-1">{item.variant.title}</div>
+        )}
         <LineItemOptions variant={item.variant} data-testid="product-variant" />
       </Table.Cell>
 
       {type === "full" && (
-        <Table.Cell>
+        <Table.Cell className="align-top">
           <div className="flex gap-2 items-center w-28">
-            <DeleteButton id={item.id} data-testid="product-delete-button" />
+            <DeleteButton id={item.id} data-testid="product-delete-button" className="text-xs text-red-500 hover:text-red-700 transition-colors duration-200 rounded-full border border-red-200 px-2 py-1" />
             <CartItemSelect
               value={item.quantity}
               onChange={(value) => changeQuantity(parseInt(value.target.value))}
-              className="w-14 h-10 p-4"
+              className="w-14 h-10 p-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-pink-500"
               data-testid="product-select-button"
             >
               {/* TODO: Update this with the v2 way of managing inventory */}
@@ -107,12 +114,12 @@ const Item = ({ item, type = "full" }: ItemProps) => {
       )}
 
       {type === "full" && (
-        <Table.Cell className="hidden small:table-cell">
+        <Table.Cell className="hidden small:table-cell align-top">
           <LineItemUnitPrice item={item} style="tight" />
         </Table.Cell>
       )}
 
-      <Table.Cell className="!pr-0">
+      <Table.Cell className="!pr-0 align-top">
         <span
           className={clx("!pr-0", {
             "flex flex-col items-end h-full justify-center": type === "preview",

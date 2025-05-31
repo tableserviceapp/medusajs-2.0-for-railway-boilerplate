@@ -109,6 +109,15 @@ export default function ProductActions({
     setIsAdding(false)
   }
 
+  useEffect(() => {
+    if (product.options && product.options.length > 0 && product.variants && product.variants.length > 0) {
+      console.log('Product options:', product.options)
+      console.log('First variant options:', product.variants[0].options)
+    }
+    // Log all variants for debugging
+    console.log('Dropdown variants:', product.variants)
+  }, [product.options, product.variants]);
+
   return (
     <>
       <div className="flex flex-col gap-y-6" ref={actionsRef}>
@@ -121,23 +130,64 @@ export default function ProductActions({
         {/* Product Options */}
         <div>
           {(product.variants?.length ?? 0) > 1 && (
-            <div className="space-y-6">
-              {(product.options || []).map((option) => {
-                return (
-                  <div key={option.id}>
-                    <OptionSelect
-                      option={option}
-                      current={options[option.title ?? ""]}
-                      updateOption={setOptionValue}
-                      title={option.title ?? ""}
-                      product={product}
-                      data-testid="product-options"
-                      disabled={!!disabled || isAdding}
-                    />
-                  </div>
-                )
-              })}
-            </div>
+            <>
+              {(product.options && product.options.length > 0) ? (
+                <div className="space-y-6">
+                  {(product.options || []).map((option) => {
+                    return (
+                      <div key={option.id}>
+                        <OptionSelect
+                          option={option}
+                          current={options[option.title ?? ""]}
+                          updateOption={setOptionValue}
+                          title={option.title ?? ""}
+                          product={product}
+                          data-testid="product-options"
+                          disabled={!!isAdding || !!disabled}
+                        />
+                      </div>
+                    )
+                  })}
+                </div>
+              ) : (
+                <div className="flex flex-col gap-y-3">
+                  <label className="text-sm font-medium text-gray-700">Select Variant</label>
+                  <select
+                    value={selectedVariant?.id || ""}
+                    onChange={e => {
+                      const variant = (product.variants ?? []).find(v => v.id === e.target.value)
+                      if (variant) {
+                        setOptions(optionsAsKeymap(variant.options))
+                      }
+                    }}
+                    className="w-full h-12 px-4 pr-10 text-base border border-gray-300 rounded-lg bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200"
+                    disabled={!!isAdding || !!disabled}
+                  >
+                    <option value="" disabled>Select variant</option>
+                    {(product.variants ?? []).map((variant, idx) => {
+                      // Always use the variant title if present
+                      let label = variant.title && variant.title.trim() !== '' ? variant.title : undefined
+                      if (!label) {
+                        if (variant.options && variant.options.length > 0) {
+                          label = variant.options.map(opt => {
+                            const productOption = (product.options || []).find(o => o.id === opt.option_id)
+                            // Remove any leading colon or extra characters
+                            return `${productOption?.title ? productOption.title + ' ' : ''}${opt.value ?? ''}`
+                          }).join(' / ')
+                        } else {
+                          label = `Variant ${idx + 1}`
+                        }
+                      }
+                      // Remove any accidental leading colon or whitespace
+                      label = label?.replace(/^\s*:\s*/, '')
+                      return (
+                        <option key={variant.id} value={variant.id}>{label}</option>
+                      )
+                    })}
+                  </select>
+                </div>
+              )}
+            </>
           )}
         </div>
 
@@ -162,7 +212,7 @@ export default function ProductActions({
         {/* Add to Cart Button */}
         <Button
           onClick={handleAddToCart}
-          disabled={!inStock || !selectedVariant || !!disabled || isAdding}
+          disabled={!inStock || !selectedVariant || !!isAdding || !!disabled}
           variant="primary"
           className="w-full h-12 bg-pink-500 hover:bg-pink-600 text-white font-semibold rounded-full transition-colors duration-200"
           isLoading={isAdding}
@@ -184,7 +234,7 @@ export default function ProductActions({
           handleAddToCart={handleAddToCart}
           isAdding={isAdding}
           show={!inView}
-          optionsDisabled={!!disabled || isAdding}
+          optionsDisabled={!!isAdding || !!disabled}
         />
       </div>
     </>

@@ -1,23 +1,28 @@
-import React from "react"
+'use client'
+import React, { useEffect, useState } from "react"
+
+const promoMessages = [
+  "FREE DELIVERY ON ORDERS OVER £40",
+  "ORDER BEFORE 1PM, FOR NEXT DAY DELIVERY"
+]
+
+const DISPLAY_INTERVAL = 5000 // ms
 
 const PromoBanner = () => {
-  const promoMessages = [
-    "🚚 Free delivery on orders over £39.50",
-    "📅 Order up to 3 months in advance", 
-    "⏰ Order by 4pm for next day delivery",
-    "🎂 Handcrafted fresh daily",
-    "✨ Premium ingredients only"
-  ]
+  const [current, setCurrent] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % promoMessages.length)
+    }, DISPLAY_INTERVAL)
+    return () => clearInterval(interval)
+  }, [])
 
   return (
-    <div className="text-gray-800 py-3 overflow-hidden shadow-lg" style={{ backgroundColor: '#fff2ec' }}>
-      <div className="flex animate-scroll whitespace-nowrap">
-        {promoMessages.map((message, index) => (
-          <div key={index} className="flex items-center px-12 text-sm font-semibold">
-            <span className="drop-shadow-sm">{message}</span>
-          </div>
-        ))}
-      </div>
+    <div className="text-gray-800 overflow-hidden shadow-lg flex items-center justify-center" style={{ backgroundColor: '#fff2ec', minHeight: 40, height: 40 }}>
+      <span className="text-sm font-semibold drop-shadow-sm text-center w-full">
+        {promoMessages[current]}
+      </span>
     </div>
   )
 }

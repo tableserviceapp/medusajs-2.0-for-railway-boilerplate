@@ -13,9 +13,29 @@ export default async function Nav() {
   const regions = await listRegions().then((regions: StoreRegion[]) => regions)
   const categories = await listCategories()
 
+  // Find the Free From category
+  const freeFromCategory = categories?.find(cat => 
+    cat.handle === 'free-from' || 
+    cat.handle === 'vegan-cakes' || 
+    cat.handle === 'gluten-free' || 
+    cat.handle === 'dairy-free'
+  )
+
+  // Find the Our Products category
+  const ourProductsCategory = categories?.find(cat => 
+    cat.handle === 'our-products' || 
+    cat.handle === 'birthday-cakes' || 
+    cat.handle === 'baby-sponges' || 
+    cat.handle === 'brownies-by-post'
+  )
+
+  // Find the By Occasion category and its children
+  const byOccasionCategory = categories?.find(cat => cat.handle === 'by-occasion')
+  const byOccasionSubcategories = categories?.filter(cat => cat.parent_id === byOccasionCategory?.id)
+
   const navigationItems = [
     { name: "Home", href: "/" },
-    { name: "Free From", href: "/collections/free-from" },
+    { name: "Free From", href: freeFromCategory ? `/categories/${freeFromCategory.handle}` : "/categories/vegan-cakes" },
     { name: "About", href: "/about" },
     { name: "Blog", href: "/blog" },
     { name: "Get in Touch", href: "/contact" }
@@ -124,7 +144,14 @@ export default async function Nav() {
                     <div>
                       <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Categories</h4>
                       <div className="space-y-1">
-                        {categories?.slice(0, 6).map((category) => {
+                        {categories?.filter(category => 
+                          category.handle === 'birthday-cakes' ||
+                          category.handle === 'baby-sponges' ||
+                          category.handle === 'brownies-by-post' ||
+                          category.handle === 'vegan-cakes' ||
+                          category.handle === 'gluten-free' ||
+                          category.handle === 'dairy-free'
+                        ).map((category) => {
                           // Define icons for different categories
                           const getCategoryIcon = (categoryName: string) => {
                             const name = categoryName.toLowerCase();
@@ -168,15 +195,36 @@ export default async function Nav() {
                 </div>
               </div>
 
-              {/* By Occasion Link */}
-              <LocalizedClientLink
-                href="/categories/by-occasion"
-                className="text-gray-700 hover:text-pink-500 font-medium text-base font-nav tracking-normal transition-all duration-200 relative group/nav py-2"
-                data-testid="nav-by-occasion-link"
-              >
-                By Occasion
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-pink-500 to-orange-500 transition-all duration-300 group-hover/nav:w-full"></span>
-              </LocalizedClientLink>
+              {/* By Occasion Dropdown */}
+              <div className="relative group/occasion">
+                <button className="text-gray-700 hover:text-pink-500 font-medium text-base font-nav tracking-normal transition-all duration-200 relative py-2 flex items-center gap-1">
+                  By Occasion
+                  <svg className="w-4 h-4 transition-transform duration-200 group-hover/occasion:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-pink-500 to-orange-500 transition-all duration-300 group-hover/occasion:w-full"></span>
+                </button>
+                {/* Dropdown Menu */}
+                <div className="absolute top-full left-0 mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 opacity-0 invisible group-hover/occasion:opacity-100 group-hover/occasion:visible transition-all duration-300 transform translate-y-2 group-hover/occasion:translate-y-0 z-50">
+                  <div className="p-6">
+                    <div>
+                      <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Occasions</h4>
+                      <div className="space-y-1">
+                        {byOccasionSubcategories?.map((subcategory) => (
+                          <LocalizedClientLink key={subcategory.id} href={`/categories/${subcategory.handle}`}>
+                            <div className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 group/item">
+                              <span className="text-gray-700 group-hover/item:text-pink-500 font-medium">{subcategory.name}</span>
+                              <svg className="w-4 h-4 text-gray-400 group-hover/item:text-pink-500 opacity-0 group-hover/item:opacity-100 transition-all duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                            </div>
+                          </LocalizedClientLink>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
               {/* Other Navigation Items */}
               {navigationItems.slice(1).map((item) => (

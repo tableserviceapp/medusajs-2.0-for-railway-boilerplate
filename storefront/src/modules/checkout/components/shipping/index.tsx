@@ -1,7 +1,6 @@
 "use client"
 
 import { RadioGroup } from "@headlessui/react"
-import { CheckCircleSolid } from "@medusajs/icons"
 import { Button, Heading, Text, clx } from "@medusajs/ui"
 
 import Divider from "@modules/common/components/divider"
@@ -12,6 +11,12 @@ import { useEffect, useState } from "react"
 import { setShippingMethod } from "@lib/data/cart"
 import { convertToLocale } from "@lib/util/money"
 import { HttpTypes } from "@medusajs/types"
+
+const CheckIcon = () => (
+  <svg className="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+  </svg>
+)
 
 type ShippingProps = {
   cart: HttpTypes.StoreCart
@@ -29,7 +34,7 @@ const Shipping: React.FC<ShippingProps> = ({
   const router = useRouter()
   const pathname = usePathname()
 
-  const isOpen = searchParams.get("step") === "delivery"
+  const isOpen = searchParams?.get("step") === "delivery"
 
   const selectedShippingMethod = availableShippingMethods?.find(
     // To do: remove the previously selected shipping method instead of using the last one
@@ -60,12 +65,12 @@ const Shipping: React.FC<ShippingProps> = ({
   }, [isOpen])
 
   return (
-    <div className="bg-white">
+    <div>
       <div className="flex flex-row items-center justify-between mb-6">
         <Heading
           level="h2"
           className={clx(
-            "flex flex-row text-3xl-regular gap-x-2 items-baseline",
+            "text-2xl font-bold text-gray-900 flex items-center gap-2",
             {
               "opacity-50 pointer-events-none select-none":
                 !isOpen && cart.shipping_methods?.length === 0,
@@ -73,28 +78,24 @@ const Shipping: React.FC<ShippingProps> = ({
           )}
         >
           Delivery
-          {!isOpen && (cart.shipping_methods?.length ?? 0) > 0 && (
-            <CheckCircleSolid />
-          )}
+          {!isOpen && (cart.shipping_methods?.length ?? 0) > 0 && <CheckIcon />}
         </Heading>
         {!isOpen &&
           cart?.shipping_address &&
           cart?.billing_address &&
           cart?.email && (
-            <Text>
-              <button
-                onClick={handleEdit}
-                className="text-ui-fg-interactive hover:text-ui-fg-interactive-hover"
-                data-testid="edit-delivery-button"
-              >
-                Edit
-              </button>
-            </Text>
+            <button
+              onClick={handleEdit}
+              className="text-pink-600 hover:text-pink-700 font-medium transition-colors duration-200"
+              data-testid="edit-delivery-button"
+            >
+              Edit
+            </button>
           )}
       </div>
       {isOpen ? (
         <div data-testid="delivery-options-container">
-          <div className="pb-8">
+          <div className="space-y-3 mb-6">
             <RadioGroup value={selectedShippingMethod?.id} onChange={set}>
               {availableShippingMethods?.map((option) => {
                 return (
@@ -103,10 +104,13 @@ const Shipping: React.FC<ShippingProps> = ({
                     value={option.id}
                     data-testid="delivery-option-radio"
                     className={clx(
-                      "flex items-center justify-between text-small-regular cursor-pointer py-4 border rounded-rounded px-8 mb-2 hover:shadow-borders-interactive-with-active",
+                      "flex items-center justify-between cursor-pointer p-6 border-2 rounded-xl transition-all duration-200",
+                      "hover:border-gray-300 hover:shadow-md",
                       {
-                        "border-ui-border-interactive":
+                        "border-pink-500 bg-pink-50":
                           option.id === selectedShippingMethod?.id,
+                        "border-gray-200 bg-white":
+                          option.id !== selectedShippingMethod?.id,
                       }
                     )}
                   >
@@ -114,9 +118,9 @@ const Shipping: React.FC<ShippingProps> = ({
                       <Radio
                         checked={option.id === selectedShippingMethod?.id}
                       />
-                      <span className="text-base-regular">{option.name}</span>
+                      <span className="text-base font-medium text-gray-900">{option.name}</span>
                     </div>
-                    <span className="justify-self-end text-ui-fg-base">
+                    <span className="text-lg font-semibold text-gray-900">
                       {convertToLocale({
                         amount: option.amount!,
                         currency_code: cart?.currency_code,
@@ -133,38 +137,35 @@ const Shipping: React.FC<ShippingProps> = ({
             data-testid="delivery-option-error-message"
           />
 
-          <Button
-            size="large"
-            className="mt-6"
+          <button
+            className="mt-8 w-full bg-pink-500 hover:bg-pink-600 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             onClick={handleSubmit}
-            isLoading={isLoading}
-            disabled={!cart.shipping_methods?.[0]}
+            disabled={isLoading || !cart.shipping_methods?.[0]}
             data-testid="submit-delivery-option-button"
           >
-            Continue to payment
-          </Button>
+            {isLoading ? "Processing..." : "Continue to payment"}
+          </button>
         </div>
       ) : (
-        <div>
-          <div className="text-small-regular">
-            {cart && (cart.shipping_methods?.length ?? 0) > 0 && (
-              <div className="flex flex-col w-1/3">
-                <Text className="txt-medium-plus text-ui-fg-base mb-1">
-                  Method
-                </Text>
-                <Text className="txt-medium text-ui-fg-subtle">
-                  {selectedShippingMethod?.name}{" "}
+        <div className="bg-gray-50 rounded-xl p-6">
+          {cart && (cart.shipping_methods?.length ?? 0) > 0 && (
+            <div>
+              <Text className="text-sm font-medium text-gray-600 mb-2">
+                Delivery Method
+              </Text>
+              <Text className="text-base text-gray-900">
+                {selectedShippingMethod?.name}{" "}
+                <span className="font-semibold">
                   {convertToLocale({
                     amount: selectedShippingMethod?.amount!,
                     currency_code: cart?.currency_code,
                   })}
-                </Text>
-              </div>
-            )}
-          </div>
+                </span>
+              </Text>
+            </div>
+          )}
         </div>
       )}
-      <Divider className="mt-8" />
     </div>
   )
 }

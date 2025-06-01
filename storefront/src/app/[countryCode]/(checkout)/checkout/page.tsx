@@ -9,7 +9,7 @@ import { HttpTypes } from "@medusajs/types"
 import { getCustomer } from "@lib/data/customer"
 
 export const metadata: Metadata = {
-  title: "Checkout",
+  title: "Checkout - Cake Box Gifts",
 }
 
 const fetchCart = async () => {
@@ -31,11 +31,17 @@ export default async function Checkout() {
   const customer = await getCustomer()
 
   return (
-    <div className="grid grid-cols-1 small:grid-cols-[1fr_416px] content-container gap-x-40 py-12">
-      <Wrapper cart={cart}>
-        <CheckoutForm cart={cart} customer={customer} />
-      </Wrapper>
-      <CheckoutSummary cart={cart} />
+    <div className="max-w-7xl mx-auto px-6 py-12">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-x-12 gap-y-8">
+        <div className="order-2 lg:order-1">
+          <Wrapper cart={cart}>
+            <CheckoutForm cart={cart} customer={customer} />
+          </Wrapper>
+        </div>
+        <div className="order-1 lg:order-2">
+          <CheckoutSummary cart={cart} />
+        </div>
+      </div>
     </div>
   )
 }

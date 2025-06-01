@@ -26,20 +26,21 @@ export default async function CheckoutForm({
 
   return (
     <div>
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">Checkout</h1>
       <div className="w-full grid grid-cols-1 gap-y-8">
-        <div>
+        <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
           <Addresses cart={cart} customer={customer} />
         </div>
 
-        <div>
+        <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
           <Shipping cart={cart} availableShippingMethods={shippingMethods} />
         </div>
 
-        <div>
+        <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
           <Payment cart={cart} availablePaymentMethods={paymentMethods} />
         </div>
 
-        <div>
+        <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
           <Review cart={cart} />
         </div>
       </div>

@@ -59,7 +59,14 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
         />
       )
     default:
-      return <Button disabled>Select a payment method</Button>
+      return (
+        <button 
+          disabled 
+          className="w-full bg-gray-300 text-gray-500 font-bold py-4 px-6 rounded-xl cursor-not-allowed"
+        >
+          Select a payment method
+        </button>
+      )
   }
 }
 
@@ -72,13 +79,14 @@ const GiftCardPaymentButton = () => {
   }
 
   return (
-    <Button
+    <button
       onClick={handleOrder}
-      isLoading={submitting}
+      disabled={submitting}
+      className="w-full bg-pink-500 hover:bg-pink-600 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
       data-testid="submit-order-button"
     >
-      Place order
-    </Button>
+      {submitting ? "Processing..." : "Place order"}
+    </button>
   )
 }
 
@@ -172,15 +180,14 @@ const StripePaymentButton = ({
 
   return (
     <>
-      <Button
-        disabled={disabled || notReady}
+      <button
+        disabled={disabled || notReady || submitting}
         onClick={handlePayment}
-        size="large"
-        isLoading={submitting}
+        className="w-full bg-pink-500 hover:bg-pink-600 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
         data-testid={dataTestId}
       >
-        Place order
-      </Button>
+        {submitting ? "Processing..." : "Place order"}
+      </button>
       <ErrorMessage
         error={errorMessage}
         data-testid="stripe-payment-error-message"
@@ -259,7 +266,7 @@ const PayPalPaymentButton = ({
   }
 }
 
-const ManualTestPaymentButton = ({ notReady }: { notReady: boolean }) => {
+const ManualTestPaymentButton = ({ notReady, "data-testid": dataTestId }: { notReady: boolean; "data-testid": string }) => {
   const [submitting, setSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
@@ -281,15 +288,14 @@ const ManualTestPaymentButton = ({ notReady }: { notReady: boolean }) => {
 
   return (
     <>
-      <Button
-        disabled={notReady}
-        isLoading={submitting}
+      <button
+        disabled={notReady || submitting}
         onClick={handlePayment}
-        size="large"
-        data-testid="submit-order-button"
+        className="w-full bg-pink-500 hover:bg-pink-600 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+        data-testid={dataTestId}
       >
-        Place order
-      </Button>
+        {submitting ? "Processing..." : "Place order"}
+      </button>
       <ErrorMessage
         error={errorMessage}
         data-testid="manual-payment-error-message"

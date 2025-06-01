@@ -201,14 +201,15 @@ const CartDropdown = ({
                       })}
                     </span>
                   </div>
-                  <LocalizedClientLink href="/cart" passHref>
-                    <Button
-                      className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white font-bold py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
-                      size="large"
-                      data-testid="go-to-cart-button"
-                    >
-                      View Cart & Checkout
-                    </Button>
+                  <LocalizedClientLink
+                    href="/cart"
+                    className="w-full bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-[1.02] flex items-center justify-center gap-2 text-base"
+                    data-testid="go-to-cart-button"
+                  >
+                    <span>View Cart</span>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
                   </LocalizedClientLink>
                 </div>
               </>
@@ -223,9 +224,12 @@ const CartDropdown = ({
                   <span className="text-gray-600">Your cart is empty.</span>
                   <div>
                     <LocalizedClientLink href="/store">
-                      <Button className="bg-pink-500 hover:bg-pink-600 text-white px-6 py-2 rounded-lg transition-colors duration-200">
-                        Explore products
-                      </Button>
+                      <button className="bg-pink-500 hover:bg-pink-600 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-[1.02] flex items-center gap-2">
+                        <span>Explore products</span>
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                      </button>
                     </LocalizedClientLink>
                   </div>
                 </div>

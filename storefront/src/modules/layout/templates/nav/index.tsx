@@ -168,6 +168,16 @@ export default async function Nav() {
                 </div>
               </div>
 
+              {/* By Occasion Link */}
+              <LocalizedClientLink
+                href="/categories/by-occasion"
+                className="text-gray-700 hover:text-pink-500 font-medium text-base font-nav tracking-normal transition-all duration-200 relative group/nav py-2"
+                data-testid="nav-by-occasion-link"
+              >
+                By Occasion
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-pink-500 to-orange-500 transition-all duration-300 group-hover/nav:w-full"></span>
+              </LocalizedClientLink>
+
               {/* Other Navigation Items */}
               {navigationItems.slice(1).map((item) => (
                 <LocalizedClientLink

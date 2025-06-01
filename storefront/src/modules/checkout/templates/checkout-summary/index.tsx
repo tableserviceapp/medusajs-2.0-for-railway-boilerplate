@@ -7,20 +7,36 @@ import Divider from "@modules/common/components/divider"
 
 const CheckoutSummary = ({ cart }: { cart: any }) => {
   return (
-    <div className="sticky top-0 flex flex-col-reverse small:flex-col gap-y-8 py-8 small:py-0 ">
-      <div className="w-full bg-white flex flex-col">
-        <Divider className="my-6 small:hidden" />
+    <div className="sticky top-28">
+      <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
         <Heading
           level="h2"
-          className="flex flex-row text-3xl-regular items-baseline"
+          className="text-2xl font-bold text-gray-900 mb-6"
         >
-          In your Cart
+          Order Summary
         </Heading>
+        
+        <div className="space-y-4 mb-6">
+          <ItemsPreviewTemplate items={cart?.items} />
+        </div>
+        
         <Divider className="my-6" />
-        <CartTotals totals={cart} />
-        <ItemsPreviewTemplate items={cart?.items} />
-        <div className="my-6">
+        
+        <div className="mb-6">
           <DiscountCode cart={cart} />
+        </div>
+        
+        <Divider className="my-6" />
+        
+        <CartTotals totals={cart} />
+        
+        <div className="mt-8 p-4 bg-pink-50 rounded-xl">
+          <div className="flex items-center gap-2 text-sm text-pink-700">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+            </svg>
+            <span className="font-medium">Free gift wrapping on all orders!</span>
+          </div>
         </div>
       </div>
     </div>

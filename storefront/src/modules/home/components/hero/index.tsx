@@ -58,14 +58,12 @@ const Hero = () => {
           {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
             <LocalizedClientLink href="/store">
-                <Button className="group/btn text-lg px-8 py-4 bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white font-bold rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 border-0">
-                  <span className="flex items-center gap-3">
-                    Shop Now
-                    <svg className="w-5 h-5 transform group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
+                <Button className="group/btn text-lg px-8 py-4 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 border-0">
+                  Shop Now
+                  <span className="inline-block ml-2 transition-transform duration-300 group-hover/btn:translate-x-1">
+                    →
                   </span>
-              </Button>
+                </Button>
             </LocalizedClientLink>
             </div>
           </div>

@@ -11,6 +11,12 @@ const regionMapCache = {
   regionMapUpdated: Date.now(),
 }
 
+console.log("Middleware running. ENV:", {
+  BACKEND_URL: process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL,
+  PUBLISHABLE_API_KEY: process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY,
+  DEFAULT_REGION: process.env.NEXT_PUBLIC_DEFAULT_REGION,
+});
+
 async function getRegionMap() {
   const { regionMap, regionMapUpdated } = regionMapCache
 
@@ -29,6 +35,8 @@ async function getRegionMap() {
       },
     }).then((res) => res.json())
 
+    console.log("Fetched regions:", regions)
+
     if (!regions?.length) {
       notFound()
     }
@@ -42,6 +50,8 @@ async function getRegionMap() {
 
     regionMapCache.regionMapUpdated = Date.now()
   }
+
+  console.log("Region map keys:", Array.from(regionMapCache.regionMap.keys()))
 
   return regionMapCache.regionMap
 }
@@ -122,6 +132,7 @@ export async function middleware(request: NextRequest) {
 
   // If no country code is set, we redirect to the relevant region.
   if (!urlHasCountryCode && countryCode) {
+    console.log("Redirecting to:", `${request.nextUrl.origin}/${countryCode}${redirectPath}${queryString}`);
     redirectUrl = `${request.nextUrl.origin}/${countryCode}${redirectPath}${queryString}`
     response = NextResponse.redirect(`${redirectUrl}`, 307)
   }

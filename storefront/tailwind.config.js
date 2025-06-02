@@ -46,6 +46,20 @@ module.exports = {
           800: "#b04559",
           900: "#943a4a",
         },
+        accessible: {
+          primary: "#1D4ED8",
+          primaryDark: "#1E3A8A",
+          secondary: "#7C2D12",
+          success: "#14532D",
+          warning: "#92400E",
+          error: "#991B1B",
+          text: "#111827",
+          textLight: "#374151",
+          background: "#FFFFFF",
+          backgroundAlt: "#F9FAFB",
+          border: "#D1D5DB",
+          borderDark: "#6B7280",
+        },
       },
       borderRadius: {
         none: "0px",
@@ -93,6 +107,22 @@ module.exports = {
           "Arial",
           "sans-serif",
         ],
+      },
+      spacing: {
+        '11': '2.75rem',
+        '12': '3rem',
+        '13': '3.25rem',
+        '14': '3.5rem',
+        '15': '3.75rem',
+        '18': '4.5rem',
+      },
+      minHeight: {
+        'touch': '44px',
+        'touch-lg': '48px',
+      },
+      minWidth: {
+        'touch': '44px',
+        'touch-lg': '48px',
       },
       keyframes: {
         ring: {
@@ -182,5 +212,28 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-radix")()],
+  plugins: [
+    require("tailwindcss-radix")(),
+    function({ addUtilities, theme }) {
+      const newUtilities = {
+        '.touch-target': {
+          minWidth: theme('minWidth.touch-lg'),
+          minHeight: theme('minHeight.touch-lg'),
+          padding: theme('spacing.2'),
+        },
+        '.touch-target-sm': {
+          minWidth: theme('minWidth.touch'),
+          minHeight: theme('minHeight.touch'),
+          padding: theme('spacing.1'),
+        },
+        '.accessible-focus': {
+          '&:focus': {
+            outline: `2px solid ${theme('colors.accessible.primary')}`,
+            outlineOffset: '2px',
+          },
+        },
+      }
+      addUtilities(newUtilities)
+    }
+  ],
 }

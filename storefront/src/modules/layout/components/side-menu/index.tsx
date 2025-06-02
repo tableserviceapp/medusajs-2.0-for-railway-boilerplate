@@ -41,12 +41,28 @@ const SideMenu = ({ regions }: { regions: HttpTypes.StoreRegion[] | null }) => {
               <div className="relative flex h-full">
                 <Popover.Button
                   data-testid="nav-menu-button"
-                  className="relative h-full flex items-center px-4 py-2 text-gray-700 hover:text-pink-500 transition-all ease-out duration-200 focus:outline-none font-medium font-nav"
+                  className={clx(
+                    "relative h-full flex items-center px-4 py-2",
+                    "text-accessible-text hover:text-accessible-primary",
+                    "transition-all ease-out duration-200",
+                    "focus:outline-none focus:ring-2 focus:ring-accessible-primary focus:ring-offset-2",
+                    "font-medium font-nav touch-target",
+                    "accessible-focus"
+                  )}
+                  aria-label={open ? "Close navigation menu" : "Open navigation menu"}
+                  aria-expanded={open}
+                  aria-haspopup="menu"
                 >
-                  <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg 
+                    className="w-6 h-6 mr-2" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                   </svg>
-                  Menu
+                  <span className="sr-only sm:not-sr-only">Menu</span>
                 </Popover.Button>
               </div>
 
@@ -60,38 +76,64 @@ const SideMenu = ({ regions }: { regions: HttpTypes.StoreRegion[] | null }) => {
                 leaveFrom="opacity-100 backdrop-blur-2xl"
                 leaveTo="opacity-0"
               >
-                <Popover.Panel className="flex flex-col absolute w-full pr-4 sm:pr-0 sm:w-1/3 2xl:w-1/4 sm:min-w-min h-[calc(100vh-1rem)] z-30 inset-x-0 text-sm text-white m-2 backdrop-blur-2xl">
+                <Popover.Panel 
+                  className="flex flex-col absolute w-full pr-4 sm:pr-0 sm:w-1/3 2xl:w-1/4 sm:min-w-min h-[calc(100vh-1rem)] z-30 inset-x-0 text-sm text-white m-2 backdrop-blur-2xl"
+                  role="dialog"
+                  aria-modal="true"
+                  aria-label="Navigation menu"
+                >
                   <div
                     data-testid="nav-menu-popup"
-                    className="flex flex-col h-full bg-gradient-to-br from-pink-500/95 via-pink-500/95 to-orange-500/95 rounded-2xl justify-between p-6 shadow-2xl"
+                    className="flex flex-col h-full bg-gradient-to-br from-accessible-primary/95 via-accessible-primary/95 to-accessible-primaryDark/95 rounded-2xl justify-between p-6 shadow-2xl"
                   >
                     <div className="flex justify-end" id="xmark">
                       <button 
                         data-testid="close-menu-button" 
                         onClick={close}
-                        className="p-2 hover:bg-white/20 rounded-full transition-colors duration-200"
+                        className={clx(
+                          "p-2 hover:bg-white/20 rounded-full transition-colors duration-200",
+                          "touch-target-sm",
+                          "focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2",
+                          "accessible-focus"
+                        )}
+                        aria-label="Close navigation menu"
+                        type="button"
                       >
-                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg 
+                          className="w-6 h-6 text-white" 
+                          fill="none" 
+                          stroke="currentColor" 
+                          viewBox="0 0 24 24"
+                          aria-hidden="true"
+                        >
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                         </svg>
                       </button>
                     </div>
-                    <ul className="flex flex-col gap-6 items-start justify-start">
-                      {Object.entries(SideMenuItems).map(([name, href]) => {
-                        return (
-                          <li key={name}>
-                            <LocalizedClientLink
-                              href={href}
-                              className="text-2xl md:text-3xl leading-10 hover:text-yellow-200 transition-colors duration-200 font-medium font-nav"
-                              onClick={close}
-                              data-testid={`${name.toLowerCase().replace(' ', '-')}-link`}
-                            >
-                              {name}
-                            </LocalizedClientLink>
-                          </li>
-                        )
-                      })}
-                    </ul>
+                    <nav role="navigation" aria-label="Main navigation">
+                      <ul className="flex flex-col gap-6 items-start justify-start" role="menu">
+                        {Object.entries(SideMenuItems).map(([name, href]) => {
+                          return (
+                            <li key={name} role="none">
+                              <LocalizedClientLink
+                                href={href}
+                                className={clx(
+                                  "text-2xl md:text-3xl leading-10 transition-colors duration-200",
+                                  "font-medium font-nav text-white hover:text-yellow-200",
+                                  "focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2",
+                                  "touch-target accessible-focus"
+                                )}
+                                onClick={close}
+                                data-testid={`${name.toLowerCase().replace(' ', '-')}-link`}
+                                role="menuitem"
+                              >
+                                {name}
+                              </LocalizedClientLink>
+                            </li>
+                          )
+                        })}
+                      </ul>
+                    </nav>
                     <div className="flex flex-col gap-y-6">
                       <div
                         className="flex justify-between items-center p-4 bg-white/10 rounded-lg backdrop-blur-sm"
@@ -112,6 +154,7 @@ const SideMenu = ({ regions }: { regions: HttpTypes.StoreRegion[] | null }) => {
                           fill="none" 
                           stroke="currentColor" 
                           viewBox="0 0 24 24"
+                          aria-hidden="true"
                         >
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>

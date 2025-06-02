@@ -14,8 +14,6 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   experimental: {
-    cacheSnapshots: true,
-    optimizeCss: true,
     optimizePackageImports: ['@medusajs/ui', '@medusajs/js-sdk'],
   },
   images: {

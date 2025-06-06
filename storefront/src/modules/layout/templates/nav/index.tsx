@@ -37,7 +37,7 @@ export default async function Nav() {
   ]
 
   return (
-    <div className="sticky top-0 inset-x-0 z-50 group">
+    <div className="relative z-50">
       {/* Promotional Banner */}
       <PromoBanner />
       

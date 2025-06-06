@@ -86,17 +86,17 @@ const VeganBestSellers = ({ products = [] }: VeganBestSellersProps) => {
   const displayProducts = products.length > 0 ? products : fallbackProducts
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-8 sm:py-12 md:py-16 bg-white">
       <div className="content-container">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-4 sm:mb-6 md:mb-8">
           <div>
-            <h2 className="text-4xl font-bold text-gray-900 flex items-center gap-3">
-              <span className="text-4xl">🌱</span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 flex items-center gap-3">
+              <span className="text-2xl sm:text-3xl md:text-4xl">🌱</span>
               VEGAN BEST SELLERS
             </h2>
-            <p className="text-lg text-green-700 mt-2">Our most popular plant-based treats that customers absolutely love!</p>
+            <p className="text-sm sm:text-base md:text-lg text-green-700 mt-2">Our most popular plant-based treats that customers absolutely love!</p>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="hidden sm:flex items-center space-x-2">
             <button 
               onClick={scrollLeft}
               className="w-10 h-10 rounded-full bg-white shadow-lg hover:shadow-xl flex items-center justify-center text-gray-600 hover:text-green-500 transition-all duration-200 hover:scale-105"
@@ -118,7 +118,7 @@ const VeganBestSellers = ({ products = [] }: VeganBestSellersProps) => {
         
         <div 
           ref={scrollRef}
-          className="flex space-x-6 overflow-x-auto scrollbar-hide scroll-smooth pb-4"
+          className="flex space-x-3 sm:space-x-4 md:space-x-6 overflow-x-auto scrollbar-hide scroll-smooth pb-4"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {displayProducts.map((product, index) => {
@@ -153,7 +153,7 @@ const VeganBestSellers = ({ products = [] }: VeganBestSellersProps) => {
 
             return (
               <LocalizedClientLink key={isRealProduct ? (product as HttpTypes.StoreProduct).id : index} href={productHref}>
-                <div className="group flex-shrink-0 w-96 cursor-pointer">
+                <div className="group flex-shrink-0 w-64 sm:w-80 md:w-96 cursor-pointer">
                   <div className="relative overflow-hidden">
                     <img
                       src={productImage}
@@ -168,7 +168,7 @@ const VeganBestSellers = ({ products = [] }: VeganBestSellersProps) => {
                   </div>
                   
                   <div className="mt-4 text-left">
-                    <h3 className="font-normal text-base text-gray-900 mb-2 group-hover:text-green-600 transition-colors line-clamp-2">
+                    <h3 className="font-normal text-sm sm:text-base text-gray-900 mb-2 group-hover:text-green-600 transition-colors line-clamp-2">
                       {productName}
                     </h3>
                     

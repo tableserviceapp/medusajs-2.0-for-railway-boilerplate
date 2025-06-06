@@ -46,11 +46,8 @@ export default async function Nav() {
         {/* Top Row: Logo, Search, Account/Cart */}
         <div className="content-container pt-3">
           <div className="flex items-center justify-between w-full h-20 lg:h-24">
-            {/* Mobile Menu Button & Logo */}
-            <div className="flex items-center gap-4">
-              <div className="flex items-center lg:hidden">
-                <SideMenu regions={regions} />
-              </div>
+            {/* Logo */}
+            <div className="flex items-center">
               <div className="flex items-center mt-2">
                 <Logo className="hover:scale-105 transition-transform duration-200" />
               </div>
@@ -72,10 +69,10 @@ export default async function Nav() {
               </div>
             </div>
 
-            {/* Right Side - Account and Cart */}
+            {/* Right Side - Account, Cart & Mobile Menu */}
             <div className="flex items-center gap-4">
               {/* Desktop Account Link */}
-              <div className="hidden lg:block">
+              <div className="hidden xl:block">
                 <LocalizedClientLink
                   className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-pink-500 hover:bg-pink-50 rounded-full transition-all duration-200"
                   href="/account"
@@ -105,12 +102,17 @@ export default async function Nav() {
               >
                 <CartButton />
               </Suspense>
+
+              {/* Mobile Menu Button */}
+              <div className="flex items-center xl:hidden">
+                <SideMenu regions={regions} categories={categories} />
+              </div>
             </div>
           </div>
         </div>
 
         {/* Bottom Row: Main Navigation */}
-        <div className="hidden lg:block">
+        <div className="hidden xl:block">
           <div className="content-container">
             <nav className="flex items-center justify-center space-x-8 py-4">
               {/* Home Link */}

@@ -16,6 +16,11 @@ export default async function ProductPreview({
   isFeatured?: boolean
   region: HttpTypes.StoreRegion
 }) {
+  // Debug: Check product handle for links
+  console.log("ProductPreview - product.handle:", product.handle)
+  console.log("ProductPreview - product.id:", product.id)
+  console.log("ProductPreview - Link will be:", `/products/${product.handle}`)
+
   const [pricedProduct] = await getProductsById({
     ids: [product.id!],
     regionId: region.id,
@@ -25,12 +30,32 @@ export default async function ProductPreview({
     return null
   }
 
+  // Debug: Compare original vs priced product handles
+  console.log("ProductPreview - pricedProduct.handle:", pricedProduct.handle)
+  console.log("ProductPreview - handles match:", product.handle === pricedProduct.handle)
+
+  // Debug: Check image data being passed to Thumbnail
+  console.log("ProductPreview - Image data for", pricedProduct.title, ":")
+  console.log("  - Thumbnail:", pricedProduct.thumbnail || 'null')
+  console.log("  - Images count:", pricedProduct.images?.length || 0)
+  if (pricedProduct.images && pricedProduct.images.length > 0) {
+    pricedProduct.images.forEach((img, index) => {
+      console.log(`    Image ${index + 1}: ${img.url}`)
+    })
+  }
+
   const { cheapestPrice } = getProductPrice({
     product: pricedProduct,
   })
 
   // Check if product has multiple variants
   const hasMultipleVariants = product.variants && product.variants.length > 1
+
+  // Debug: Check if handle exists and create proper link
+  const productLink = pricedProduct.handle ? `/products/${pricedProduct.handle}` : '#'
+  if (!pricedProduct.handle) {
+    console.warn("ProductPreview - Product missing handle:", product.title, product.id)
+  }
 
   // Mock data for enhanced display - in real implementation, this would come from product data
   const mockRating = 4.5
@@ -40,13 +65,13 @@ export default async function ProductPreview({
   const hasOffer = cheapestPrice?.price_type === "sale"
 
   return (
-    <LocalizedClientLink href={`/products/${product.handle}`} className="group">
+    <LocalizedClientLink href={productLink} className="group">
       <div className="transition-all duration-300 group-hover:scale-[1.02]" data-testid="product-wrapper">
         {/* Product Image with Badges */}
         <div className="relative mb-4">
         <Thumbnail
-          thumbnail={product.thumbnail}
-          images={product.images}
+          thumbnail={pricedProduct.thumbnail}
+          images={pricedProduct.images}
             size="square"
           isFeatured={isFeatured}
             className="!p-0 !bg-transparent !shadow-none !rounded-none overflow-hidden"

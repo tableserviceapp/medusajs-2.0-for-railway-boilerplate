@@ -20,7 +20,7 @@ export const getProductsById = cache(async function ({
     return []
   }
   try {
-    return sdk.store.product
+    const result = await sdk.store.product
       .list(
         {
           id: ids,
@@ -28,14 +28,30 @@ export const getProductsById = cache(async function ({
           fields: PRODUCT_FIELDS,
         },
         { 
-          expand: 'variants.options.option', 
+          expand: 'variants.options.option,images', 
           next: { 
-            tags: ["products"],
-            revalidate: 0 // Disable caching to always fetch fresh data
+            tags: ["products"]
           } 
         }
       )
-      .then(({ products }) => products)
+      .then(({ products }) => {
+        // Debug image data
+        products.forEach(product => {
+          console.log(`Product: ${product.title}`)
+          console.log(`  - Thumbnail: ${product.thumbnail || 'null'}`)
+          console.log(`  - Images count: ${product.images?.length || 0}`)
+          if (product.images && product.images.length > 0) {
+            product.images.forEach((img, index) => {
+              console.log(`    Image ${index + 1}: ${img.url}`)
+            })
+          } else {
+            console.log(`    ❌ NO IMAGES FOUND`)
+          }
+          console.log(`  ---`)
+        })
+        return products
+      })
+    return result
   } catch (err) {
     console.error("getProductsById error:", err)
     return []
@@ -54,14 +70,26 @@ export const getProductByHandle = cache(async function (
         fields: PRODUCT_FIELDS,
       },
       { 
-        expand: 'variants.options.option', 
+        expand: 'variants.options.option,images', 
         next: { 
-          tags: ["products"],
-          revalidate: 0 // Disable caching to always fetch fresh data
+          tags: ["products"]
         } 
       }
     )
-    .then(({ products }) => products[0])
+    .then(({ products }) => {
+      const product = products[0]
+      if (product) {
+        console.log(`Single Product: ${product.title}`)
+        console.log(`  - Thumbnail: ${product.thumbnail || 'null'}`)
+        console.log(`  - Images count: ${product.images?.length || 0}`)
+        if (product.images && product.images.length > 0) {
+          product.images.forEach((img, index) => {
+            console.log(`    Image ${index + 1}: ${img.url}`)
+          })
+        }
+      }
+      return product
+    })
 })
 
 export const getProductsList = cache(async function ({
@@ -97,7 +125,12 @@ export const getProductsList = cache(async function ({
         fields: PRODUCT_FIELDS,
         ...queryParams,
       },
-      { next: { tags: ["products"] } }
+      { 
+        expand: 'variants.options.option,images,thumbnail,variants,collection,type,tags',
+        next: { 
+          tags: ["products"]
+        } 
+      }
     )
     .then(({ products, count }) => {
       const nextPage = count > offset + limit ? pageParam + 1 : null
@@ -207,3 +240,27 @@ export const getProductsByCategoryHandle = cache(async function (
     return []
   }
 })
+
+// Add a function to manually trigger product cache revalidation from the frontend
+export async function revalidateProductCache(productId?: string) {
+  try {
+    const response = await fetch('/api/webhooks/product-update', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-webhook-secret': process.env.WEBHOOK_SECRET || 'your-webhook-secret',
+      },
+      body: JSON.stringify({
+        event: 'product.updated',
+        data: {
+          id: productId || 'manual-refresh',
+          timestamp: new Date().toISOString(),
+        },
+      }),
+    })
+    return response.ok
+  } catch (error) {
+    console.error('Failed to revalidate cache:', error)
+    return false
+  }
+}

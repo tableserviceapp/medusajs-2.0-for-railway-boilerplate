@@ -22,7 +22,26 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
   className,
   "data-testid": dataTestid,
 }) => {
-  const initialImage = thumbnail || images?.[0]?.url
+  // Enhanced image selection logic for gallery-first setup
+  let initialImage = null
+
+  // First try thumbnail
+  if (thumbnail) {
+    initialImage = thumbnail
+    console.log("Thumbnail - Using thumbnail:", thumbnail)
+  } 
+  // Then try first image from gallery
+  else if (images && images.length > 0 && images[0]?.url) {
+    initialImage = images[0].url
+    console.log("Thumbnail - Using first gallery image:", images[0].url)
+  }
+  // Debug what we have
+  console.log("Thumbnail - Debug:", { 
+    thumbnail, 
+    imagesCount: images?.length || 0, 
+    firstImageUrl: images?.[0]?.url,
+    finalImage: initialImage 
+  })
 
   return (
     <Container

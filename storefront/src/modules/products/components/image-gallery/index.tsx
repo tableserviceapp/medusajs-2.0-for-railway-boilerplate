@@ -5,13 +5,40 @@ import Image from "next/image"
 import { useState } from "react"
 
 type ImageGalleryProps = {
-  images: HttpTypes.StoreProductImage[]
+  images?: HttpTypes.StoreProductImage[] | null
+  thumbnail?: string | null
 }
 
-const ImageGallery = ({ images }: ImageGalleryProps) => {
+const ImageGallery = ({ images, thumbnail }: ImageGalleryProps) => {
   const [selectedImage, setSelectedImage] = useState(0)
 
-  if (!images || images.length === 0) {
+  // Enhanced image selection logic for gallery-first setup
+  let displayImages: Array<{ id: string, url: string }> = []
+
+  // First, try to use images from gallery
+  if (images && images.length > 0) {
+    displayImages = images.map((img, index) => ({
+      id: img.id || `gallery-${index}`,
+      url: img.url
+    }))
+    console.log("ImageGallery - Using gallery images:", displayImages.length)
+  } 
+  // Fallback to thumbnail if no gallery images
+  else if (thumbnail) {
+    displayImages = [{
+      id: 'thumbnail',
+      url: thumbnail
+    }]
+    console.log("ImageGallery - Using thumbnail as single image:", thumbnail)
+  }
+
+  console.log("ImageGallery - Debug:", { 
+    imagesCount: images?.length || 0, 
+    thumbnail: thumbnail || 'null',
+    displayImagesCount: displayImages.length 
+  })
+
+  if (displayImages.length === 0) {
     return (
       <div className="relative aspect-square w-full bg-gray-100 rounded-lg overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center text-gray-400">
@@ -25,9 +52,9 @@ const ImageGallery = ({ images }: ImageGalleryProps) => {
     <div className="flex flex-col gap-4">
       {/* Main Image */}
       <div className="relative aspect-square w-full bg-gray-100 rounded-lg overflow-hidden">
-        {images[selectedImage]?.url && (
+        {displayImages[selectedImage]?.url && (
           <Image
-            src={images[selectedImage].url}
+            src={displayImages[selectedImage].url}
             priority={true}
             className="absolute inset-0"
             alt={`Product image ${selectedImage + 1}`}
@@ -40,10 +67,10 @@ const ImageGallery = ({ images }: ImageGalleryProps) => {
         )}
       </div>
 
-      {/* Thumbnails */}
-      {images.length > 1 && (
+      {/* Thumbnails - Only show if multiple images */}
+      {displayImages.length > 1 && (
         <div className="grid grid-cols-4 gap-4">
-          {images.map((image, index) => (
+          {displayImages.map((image, index) => (
             <button
               key={image.id}
               onClick={() => setSelectedImage(index)}

@@ -27,6 +27,14 @@ export default function CategoryTemplate({
   const category = categories[categories.length - 1]
   const parents = categories.slice(0, categories.length - 1)
 
+  // Debug: Log category information
+  console.log("CategoryTemplate - categories:", categories)
+  console.log("CategoryTemplate - category (current):", category)
+  console.log("CategoryTemplate - category.id:", category?.id)
+  console.log("CategoryTemplate - category.handle:", category?.handle)
+  console.log("CategoryTemplate - category.name:", category?.name)
+  console.log("CategoryTemplate - parents:", parents)
+
   if (!category || !countryCode) notFound()
 
   return (

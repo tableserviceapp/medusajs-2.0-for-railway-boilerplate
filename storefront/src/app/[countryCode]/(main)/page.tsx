@@ -8,6 +8,7 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 import TrendingTreats from "@modules/home/components/trending-treats"
 import VeganBestSellers from "@modules/home/components/vegan-best-sellers"
 import BirthdayCakeCollection from "@modules/home/components/birthday-cake-collection"
+import CacheRefreshButton from "@modules/common/components/cache-refresh-button"
 import { StoreRegion } from "@medusajs/types"
 
 export const metadata: Metadata = {
@@ -70,49 +71,26 @@ export default async function Home({
                 gradient: "from-green-400 to-green-600",
                 href: "/store?category=vegan"
               }
-            ].map((item, index) => (
-              <LocalizedClientLink key={index} href={item.href}>
-                <div className="group relative overflow-hidden rounded-3xl shadow-xl hover:shadow-2xl transition-shadow duration-300 cursor-pointer">
-                  <div className="aspect-square relative">
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-center">
-                        <h3 className="text-4xl font-bold text-white mb-6 drop-shadow-lg">
-                        {item.title}
-                      </h3>
-                        <div className="inline-block px-6 py-2 border-2 border-white text-white font-bold text-sm tracking-wider rounded-sm hover:bg-white hover:text-black transition-colors duration-200 drop-shadow-md">
-                          SHOP NOW
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+            ].map((collection, index) => (
+              <LocalizedClientLink
+                key={index}
+                href={collection.href}
+                className="group relative overflow-hidden rounded-lg shadow-lg transition-transform duration-300 hover:scale-105"
+              >
+                <div className={`absolute inset-0 bg-gradient-to-br ${collection.gradient} opacity-90`} />
+                <div className="relative h-64">
+                  <img
+                    src={collection.image}
+                    alt={collection.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="absolute inset-0 flex flex-col justify-end p-6 text-white">
+                  <h3 className="text-2xl font-bold mb-2">{collection.title}</h3>
+                  <p className="text-lg opacity-90">{collection.subtitle}</p>
                 </div>
               </LocalizedClientLink>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* About Section */}
-      <section className="py-16 bg-white">
-        <div className="content-container text-center">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-black">
-              🍰 Celebrate Big, Even Last Minute – with Cake Box Gifts
-            </h2>
-            <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-              Why stress over baking when you can send a cake in seconds? At Cake Box Gifts, we make it easy to turn 
-              any moment into a celebration. Whether it's a forgotten birthday, a surprise thank-you, or a just-because 
-              treat, our next-day cake delivery service ensures your gift arrives fresh, fast, and full of flavour.
-            </p>
-            <p className="text-xl font-semibold text-pink-500 mb-8">
-              Whether you're planning ahead or sending a last-minute surprise, Cake Box Gifts is your trusted cake 
-              delivery partner—delivering happiness, one slice at a time.
-            </p>
           </div>
         </div>
       </section>
@@ -122,6 +100,9 @@ export default async function Home({
 
       {/* Vegan Best Sellers */}
       <VeganBestSellers products={veganProducts} />
+
+      {/* Cache Refresh Button (Development Only) */}
+      <CacheRefreshButton />
     </div>
   )
 }

@@ -15,6 +15,9 @@ type Props = {
   }
 }
 
+export const dynamic = 'force-static'
+export const revalidate = 300 // Revalidate every 5 minutes for e-commerce freshness
+
 export async function generateStaticParams() {
   const product_categories = await listCategories()
 
@@ -82,7 +85,6 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   return (
     <CategoryTemplate
       categories={product_categories}
-      sortBy={sortBy}
       page={page}
       countryCode={params.countryCode}
     />

@@ -127,13 +127,7 @@ const SideMenu = ({ regions, categories }: SideMenuProps) => {
                       className="absolute right-0 top-0 w-80 max-w-[85vw] h-full bg-white shadow-2xl overflow-y-auto mobile-menu-panel"
                     >
                     {/* Header */}
-                    <div className="sticky top-0 bg-white border-b border-gray-100 p-4 flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-gradient-to-br from-pink-500 to-orange-500 rounded-lg flex items-center justify-center">
-                          <span className="text-white font-bold text-sm">CB</span>
-                        </div>
-                        <span className="font-bold text-gray-900">Menu</span>
-                      </div>
+                    <div className="sticky top-0 bg-white border-b border-gray-100 p-4 flex items-center justify-end">
                       <button 
                         data-testid="close-menu-button" 
                         onClick={close}

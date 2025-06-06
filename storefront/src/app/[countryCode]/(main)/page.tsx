@@ -48,7 +48,7 @@ export default async function Home({
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-2 sm:mb-4">SHOP BY CATEGORY</h2>
             <p className="text-sm sm:text-base md:text-lg text-gray-600">Discover our delicious range of premium cakes and treats</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-6 md:gap-8">
             {[
               {
                 title: "Baby Sponges",
@@ -71,23 +71,18 @@ export default async function Home({
                 gradient: "from-green-400 to-green-600",
                 href: "/store?category=vegan"
               }
-            ].map((collection, index) => (
-              <LocalizedClientLink
-                key={index}
-                href={collection.href}
-                className="group relative overflow-hidden rounded-lg shadow-lg transition-transform duration-300 hover:scale-105"
-              >
-                <div className={`absolute inset-0 bg-gradient-to-br ${collection.gradient} opacity-90`} />
-                <div className="relative h-48 sm:h-56 md:h-64">
+            ].map((category, index) => (
+              <LocalizedClientLink key={index} href={category.href}>
+                <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden rounded-3xl">
                   <img
-                    src={collection.image}
-                    alt={collection.title}
+                    src={category.image}
+                    alt={category.title}
                     className="w-full h-full object-cover"
                   />
-                </div>
-                <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-6 text-white">
-                  <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-1 sm:mb-2">{collection.title}</h3>
-                  <p className="text-sm sm:text-base md:text-lg opacity-90">{collection.subtitle}</p>
+                  <div className={`absolute inset-0 bg-gradient-to-t ${category.gradient} bg-opacity-40 sm:bg-opacity-50 md:bg-opacity-60 flex flex-col justify-center items-center text-white`}>
+                    <h3 className="text-3xl sm:text-2xl md:text-3xl font-bold mb-2 text-center drop-shadow-lg">{category.title}</h3>
+                    <p className="text-lg sm:text-base md:text-lg text-center drop-shadow-md">{category.subtitle}</p>
+                  </div>
                 </div>
               </LocalizedClientLink>
             ))}

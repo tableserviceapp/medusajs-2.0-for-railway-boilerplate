@@ -2,12 +2,11 @@ import { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { getRegion, listRegions } from "@lib/data/regions"
 import { getProductsByCategoryHandle } from "@lib/data/products"
+import { getHomepageCategories } from "@lib/data/categories"
 import { cache } from "react"
 import Hero from "@modules/home/components/hero"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import TrendingTreats from "@modules/home/components/trending-treats"
-import VeganBestSellers from "@modules/home/components/vegan-best-sellers"
-import BirthdayCakeCollection from "@modules/home/components/birthday-cake-collection"
+import DynamicCategorySection from "@modules/home/components/dynamic-category-section"
 import CacheRefreshButton from "@modules/common/components/cache-refresh-button"
 import { StoreRegion } from "@medusajs/types"
 
@@ -28,18 +27,79 @@ export default async function Home({
     notFound()
   }
 
-  // Get real products from different categories
-  const birthdayCakes = await getProductsByCategoryHandle("birthday-cakes", countryCode, 4)
-  const veganProducts = await getProductsByCategoryHandle("vegan-cakes", countryCode, 4)
-  const trendingProducts = await getProductsByCategoryHandle("trending-treats", countryCode, 8)
+  // Get homepage categories with HOMEPAGE = TRUE metadata
+  const homepageCategories = await getHomepageCategories()
+  console.log("🏠 Homepage categories result:", homepageCategories.length, "categories found")
+
+  // Fetch products for each homepage category
+  const categorySections = await Promise.all(
+    homepageCategories.map(async (category) => {
+      const products = await getProductsByCategoryHandle(category.handle, countryCode, 8)
+      console.log(`📦 Category "${category.name}" has ${products.length} products`)
+      return {
+        category,
+        products
+      }
+    })
+  )
+
+  // Filter out categories with no products
+  const validCategorySections = categorySections.filter(section => section.products.length > 0)
+  console.log("✅ Valid category sections:", validCategorySections.length)
+
+  // Fallback: if no categories have HOMEPAGE=TRUE, use the default ones
+  const fallbackSections = validCategorySections.length === 0 ? [
+    {
+      category: { 
+        id: 'trending-treats', 
+        name: 'Trending Treats', 
+        handle: 'trending-treats',
+        metadata: { homepage: true }
+      },
+      products: await getProductsByCategoryHandle("trending-treats", countryCode, 8)
+    },
+    {
+      category: { 
+        id: 'birthday-cakes', 
+        name: 'Birthday Cakes', 
+        handle: 'birthday-cakes',
+        metadata: { homepage: true }
+      },
+      products: await getProductsByCategoryHandle("birthday-cakes", countryCode, 4)
+    },
+    {
+      category: { 
+        id: 'vegan-cakes', 
+        name: 'Vegan Cakes', 
+        handle: 'vegan-cakes',
+        metadata: { homepage: true }
+      },
+      products: await getProductsByCategoryHandle("vegan-cakes", countryCode, 4)
+    }
+  ] : []
+
+  const sectionsToDisplay = validCategorySections.length > 0 ? validCategorySections : fallbackSections
+  
+  if (validCategorySections.length > 0) {
+    console.log("🎯 Using DYNAMIC categories from metadata:", validCategorySections.map(s => s.category.name))
+  } else {
+    console.log("🔄 Using FALLBACK categories:", fallbackSections.map(s => s.category.name))
+  }
 
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <Hero />
       
-      {/* Trending Treats Section */}
-      <TrendingTreats products={trendingProducts} />
+      {/* Dynamic Category Sections */}
+      {sectionsToDisplay.map((section, index) => (
+        <DynamicCategorySection
+          key={section.category.id || index}
+          category={section.category}
+          products={section.products}
+          maxProducts={section.category.handle === 'trending-treats' ? 8 : 4}
+        />
+      ))}
 
       {/* Featured Collections */}
       <section className="py-8 sm:py-12 bg-white">
@@ -89,12 +149,6 @@ export default async function Home({
           </div>
         </div>
       </section>
-
-      {/* Birthday Cake Collection */}
-      <BirthdayCakeCollection products={birthdayCakes} />
-
-      {/* Vegan Best Sellers */}
-      <VeganBestSellers products={veganProducts} />
 
       {/* Cache Refresh Button (Development Only) */}
       <CacheRefreshButton />

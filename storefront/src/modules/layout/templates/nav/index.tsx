@@ -32,7 +32,6 @@ export default async function Nav() {
   const navigationItems = [
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
-    { name: "Blog", href: "/blog" },
     { name: "Get in Touch", href: "/contact" }
   ]
 
@@ -125,37 +124,6 @@ export default async function Nav() {
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-pink-500 to-orange-500 transition-all duration-300 group-hover/nav:w-full"></span>
               </LocalizedClientLink>
 
-              {/* Free From Dropdown */}
-              <div className="relative group/freefrom">
-                <button className="text-gray-700 hover:text-pink-500 font-medium text-base font-nav tracking-normal transition-all duration-200 relative py-2 flex items-center gap-1">
-                  Free From
-                  <svg className="w-4 h-4 transition-transform duration-200 group-hover/freefrom:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-pink-500 to-orange-500 transition-all duration-300 group-hover/freefrom:w-full"></span>
-                </button>
-                {/* Dropdown Menu */}
-                <div className="absolute top-full left-0 mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 opacity-0 invisible group-hover/freefrom:opacity-100 group-hover/freefrom:visible transition-all duration-300 transform translate-y-2 group-hover/freefrom:translate-y-0 z-50">
-                  <div className="p-6">
-                    <div>
-                      <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Free From</h4>
-                      <div className="space-y-1">
-                        {freeFromSubcategories?.map((subcategory) => (
-                          <LocalizedClientLink key={subcategory.id} href={`/categories/${subcategory.handle}`}>
-                            <div className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 group/item">
-                              <span className="text-gray-700 group-hover/item:text-pink-500 font-medium">{subcategory.name}</span>
-                              <svg className="w-4 h-4 text-gray-400 group-hover/item:text-pink-500 opacity-0 group-hover/item:opacity-100 transition-all duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                              </svg>
-                            </div>
-                          </LocalizedClientLink>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
               {/* Our Products Dropdown */}
               <div className="relative group/products">
                 <button className="text-gray-700 hover:text-pink-500 font-medium text-base font-nav tracking-normal transition-all duration-200 relative py-2 flex items-center gap-1">
@@ -180,26 +148,17 @@ export default async function Nav() {
                           category.handle === 'gluten-free' ||
                           category.handle === 'dairy-free'
                         ).map((category) => {
-                          // Define icons for different categories
-                          const getCategoryIcon = (categoryName: string) => {
-                            const name = categoryName.toLowerCase();
-                            if (name.includes('baby') || name.includes('sponge')) {
-                              return "🧁";
-                            } else if (name.includes('brownie') || name.includes('chocolate')) {
-                              return "🍫";
-                            } else if (name.includes('birthday') || name.includes('celebration')) {
-                              return "🎂";
-                            } else if (name.includes('vegan') || name.includes('free')) {
-                              return "🌱";
-                            } else if (name.includes('letterbox') || name.includes('gift')) {
-                              return "📦";
-                            } else if (name.includes('cupcake') || name.includes('muffin')) {
-                              return "🧁";
-                            } else {
-                              // Default cake icon
-                              return "🍰";
+                          const getCategoryIcon = (name: string) => {
+                            const iconMap: { [key: string]: string } = {
+                              'birthday cakes': '🎂',
+                              'Baby Sponges': '🧁',
+                              'Brownies by Post': '🍫',
+                              'vegan cakes': '🌱',
+                              'Gluten Free': '🌾',
+                              'Dairy Free': '🥛'
                             }
-                          };
+                            return iconMap[name] || '🍰'
+                          }
 
                           return (
                             <LocalizedClientLink key={category.id} href={`/categories/${category.handle}`}>
@@ -254,7 +213,38 @@ export default async function Nav() {
                 </div>
               </div>
 
-              {/* Other Navigation Items */}
+              {/* Free From Dropdown */}
+              <div className="relative group/freefrom">
+                <button className="text-gray-700 hover:text-pink-500 font-medium text-base font-nav tracking-normal transition-all duration-200 relative py-2 flex items-center gap-1">
+                  Free From
+                  <svg className="w-4 h-4 transition-transform duration-200 group-hover/freefrom:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-pink-500 to-orange-500 transition-all duration-300 group-hover/freefrom:w-full"></span>
+                </button>
+                {/* Dropdown Menu */}
+                <div className="absolute top-full left-0 mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 opacity-0 invisible group-hover/freefrom:opacity-100 group-hover/freefrom:visible transition-all duration-300 transform translate-y-2 group-hover/freefrom:translate-y-0 z-50">
+                  <div className="p-6">
+                    <div>
+                      <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Free From</h4>
+                      <div className="space-y-1">
+                        {freeFromSubcategories?.map((subcategory) => (
+                          <LocalizedClientLink key={subcategory.id} href={`/categories/${subcategory.handle}`}>
+                            <div className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 group/item">
+                              <span className="text-gray-700 group-hover/item:text-pink-500 font-medium">{subcategory.name}</span>
+                              <svg className="w-4 h-4 text-gray-400 group-hover/item:text-pink-500 opacity-0 group-hover/item:opacity-100 transition-all duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                            </div>
+                          </LocalizedClientLink>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Other Navigation Items (About, Get in Touch) */}
               {navigationItems.slice(1).map((item) => (
                 <LocalizedClientLink
                   key={item.name}
